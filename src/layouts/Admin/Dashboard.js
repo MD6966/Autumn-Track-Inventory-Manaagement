@@ -8,9 +8,8 @@ import {Avatar, Box, CssBaseline, Divider,
   Drawer, List, ListItem, ListItemButton, ListItemIcon, 
   ListItemText, styled, Toolbar, Typography, AppBar, useTheme} from '@mui/material'
 import { useLocation } from 'react-router-dom';
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { makeStyles } from '@mui/styles'
-import TableViewIcon from '@mui/icons-material/TableView';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom'
 import { confirmAlert } from 'react-confirm-alert';
@@ -19,6 +18,7 @@ import { useDispatch } from 'react-redux'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import CategoryIcon from '@mui/icons-material/Category';
 const useStyles = makeStyles((theme)=> ({
     selected : {
       background:'#fcbd6a',
@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme)=> ({
 const ListData = [
     {id:1, title:'Dashboard', icon:<DashboardIcon />, to:'/admin/dashboard'  },
     {id:2, title:'Facilities', icon:<LocationOnIcon />, to:'/admin/facilities'},
-    {id:3, title:'Categories', icon:<TableViewIcon />, to:'/admin/categories'},
-    {id:4, title:'Vendors', icon:<QrCodeScannerIcon />, to:'/admin/vendors'},
+    {id:3, title:'Categories', icon:<CategoryIcon />, to:'/admin/categories'},
+    {id:4, title:'Vendors', icon:<AdminPanelSettingsIcon />, to:'/admin/vendors'},
   ]
   const StyledRoot = styled(AppBar)(({theme})=> ({
     position:'fixed',

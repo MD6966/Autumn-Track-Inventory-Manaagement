@@ -22,7 +22,7 @@ const Landing = () => {
         <Box className={classes.root}>
       Welcome To the Website 
         </Box>
-        <Footer /> 
+        {/* <Footer />  */}
     </Page>
   )
 }
