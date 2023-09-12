@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    background: #dde1e7;
+    height: 100vh;
+}
+.neumorphism {
+    margin-top: 2%;
+    height: 70%;
+    width: 60%;
+    background: #dde1e7;
+    box-shadow: -50px -50px 100px #ffffff93,  30px 30px 50px rgba(94, 104, 121,.5) ;
+    border-radius: 10px;
+
+}
+.neumorphism2 {
+    margin-top: 10%;
+    background: #dde1e7;
+    box-shadow: inset -3px -3px 8px #ffffff73,  3px 3px 5px rgba(94, 104, 121,.5) ;
+    border-radius: 5px;
+
+}
+.Grid2 {
+    background-color: black;
+    height: 70vh;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.box {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.inputField {
+    /* box-shadow: inset -15px -15px 100px #ffffff53,  inset 5px 5px 10px rgba(94, 104, 121,.5) ; */
+}
