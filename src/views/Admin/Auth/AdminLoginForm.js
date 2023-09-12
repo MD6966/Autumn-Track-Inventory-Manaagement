@@ -61,7 +61,9 @@ const AdminLoginForm = () => {
           <StyledButton type='submit' sx={{color:'#fff'}}
           > User </StyledButton>
         }
-        <StyledButton type='submit' sx={{color:'#fff'}}
+        <StyledButton sx={{color:'#fff'}}
+        component={Link}
+        to="/admin/dashboard"
           > Admin </StyledButton>
         
         </Stack>

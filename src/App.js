@@ -14,7 +14,7 @@ function App() {
   
 
   return (
-    <div className='App' >
+    <div >
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
           <SnackbarProvider
