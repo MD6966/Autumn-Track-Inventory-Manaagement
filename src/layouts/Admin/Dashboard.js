@@ -17,7 +17,6 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useDispatch } from 'react-redux'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import CategoryIcon from '@mui/icons-material/Category';
 const useStyles = makeStyles((theme)=> ({
     selected : {
@@ -136,7 +135,7 @@ const Dashboard = () => {
           <Toolbar /> 
           <Box>
             <Box sx={{display:'flex', justifyContent:'center',}}>
-              <Avatar src='/assets/images/admin.png' sx={{height:'120px', width:'120px', mt:'2rem'}} />
+              <Avatar src='/assets/images/admin.webp' sx={{height:'120px', width:'120px', mt:'2rem'}} />
             </Box>
             <Typography sx={{color:'#fff', textAlign:'center'}} variant='h6' gutterBottom> Admin </Typography>
             <Divider /> 

@@ -58,7 +58,10 @@ const AdminLoginForm = () => {
           animationDuration="0.75"
           width="30"
           visible={loading}/> </StyledButton> :
-          <StyledButton type='submit' sx={{color:'#fff'}}
+          <StyledButton 
+          component={Link}
+          to="/user/dashboard"
+          sx={{color:'#fff'}}
           > User </StyledButton>
         }
         <StyledButton sx={{color:'#fff'}}

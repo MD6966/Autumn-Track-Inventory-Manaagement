@@ -11,6 +11,9 @@ import DashboardAdmin from "./views/Admin/components/Dashboard/DashboardAdmin";
 import Facilities from "./views/Admin/components/Facilities";
 import Categories from "./views/Admin/components/Categories";
 import Vendors from "./views/Admin/components/Vendors";
+import UserDashboard from "./views/User/UserDashboard";
+import UserDashboardDefault from "./views/User/components/UserDashboardDefault";
+import UserFacilities from "./views/User/components/UserFacilities";
 
 export default function Router() {
     let element = useRoutes([
@@ -43,6 +46,13 @@ export default function Router() {
             {path:'vendors', element:<Vendors />}
         ]
        },
+       {path:'/user', element:<UserDashboard />,
+        children:[
+            {path:'dashboard', element: <UserDashboardDefault /> },
+            {path:'facilities', element:<UserFacilities />},
+        ]
+    
+        },
        {
         path:'*',
         element: <ErrorPage /> 

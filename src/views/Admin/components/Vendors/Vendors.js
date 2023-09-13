@@ -50,7 +50,7 @@ const Vendors = () => {
               <TableCell>{vendor.category}</TableCell>
               <TableCell>
               <Tooltip
-            title="Edit Name"
+            title="Edit"
             >
             <IconButton edge="end" aria-label="Edit">
               <EditIcon 
@@ -58,7 +58,7 @@ const Vendors = () => {
               />
             </IconButton>
               </Tooltip>
-              <Tooltip title="Delete Name">
+              <Tooltip title="Delete">
             <IconButton edge="end" aria-label="Delete">
               <DeleteIcon 
               sx={{color:theme.palette.primary.main}}
