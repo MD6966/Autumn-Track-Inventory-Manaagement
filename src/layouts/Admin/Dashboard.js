@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CategoryIcon from '@mui/icons-material/Category';
+import PeopleIcon from '@mui/icons-material/People';
 const useStyles = makeStyles((theme)=> ({
     selected : {
       background:'#fcbd6a',
@@ -36,6 +37,8 @@ const ListData = [
     {id:2, title:'Facilities', icon:<LocationOnIcon />, to:'/admin/facilities'},
     {id:3, title:'Categories', icon:<CategoryIcon />, to:'/admin/categories'},
     {id:4, title:'Vendors', icon:<AdminPanelSettingsIcon />, to:'/admin/vendors'},
+    {id:5, title:'Users', icon:<PeopleIcon />, to:'/admin/users'},
+
   ]
   const StyledRoot = styled(AppBar)(({theme})=> ({
     position:'fixed',

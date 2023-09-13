@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux'
+import { adminLogin } from '../../../store/actions/adminActions'
 const StyledButton = styled(Button)(({theme})=> ({
     margin:'10px 0',
     background:theme.palette.primary.main,
@@ -27,13 +28,19 @@ const AdminLoginForm = () => {
     const [loading, setLoading] = React.useState(null)
     const dispatch = useDispatch()
     const handleSubmit = (e) => {
-        // setLoading(true)
+        setLoading(true)
         e.preventDefault()
-        // console.log(formValues)
-        // dispatch(adminLogin(formValues)).then((res)=> {
-        //     console.log(res)
-        //     setLoading(false)
-        // })
+        console.log(formValues)
+        dispatch(adminLogin(formValues)).then((res)=> {
+            setLoading(false)
+            console.log(res.status)
+            if(res.status == 200) {
+              navigate('/admin/dashboard', {replace:true})
+            }
+        }).catch((err)=> {
+          setLoading(false)
+          console.log(err)
+        })
     }
     
   return (
@@ -56,15 +63,10 @@ const AdminLoginForm = () => {
           width="30"
           visible={loading}/> </StyledButton> :
           <StyledButton 
-          component={Link}
-          to="/user/dashboard"
+          type='submit'
           sx={{color:'#fff'}}
-          > User </StyledButton>
+          > Login </StyledButton>
         }
-        <StyledButton sx={{color:'#fff'}}
-        component={Link}
-        to="/admin/dashboard"
-          > Admin </StyledButton>
         
         </Stack>
         </form>

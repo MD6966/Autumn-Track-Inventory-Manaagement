@@ -15,6 +15,7 @@ import UserDashboard from "./views/User/UserDashboard";
 import UserDashboardDefault from "./views/User/components/UserDashboardDefault";
 import UserFacilities from "./views/User/components/UserFacilities";
 import Invoices from "./views/User/components/Invoices";
+import Users from "./views/Admin/components/Users";
 
 export default function Router() {
     let element = useRoutes([
@@ -44,7 +45,9 @@ export default function Router() {
             {path:'dashboard', element: <DashboardAdmin /> },
             {path:'facilities', element:<Facilities />},
             {path:'categories', element:<Categories />},
-            {path:'vendors', element:<Vendors />}
+            {path:'vendors', element:<Vendors />},
+            {path:'users', element:<Users />},
+
         ]
        },
        {path:'/user', element:<UserDashboard />,

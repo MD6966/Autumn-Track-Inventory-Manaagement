@@ -10,6 +10,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
+import AddFacility from './components/AddFacility';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -24,7 +25,6 @@ const Facilities = () => {
   const classes = useStyles();
   const theme = useTheme()
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [facilityName, setFacilityName] = useState('');
   const handleOpenDialog = () => {
     setDialogOpen(true);
   };
@@ -33,10 +33,7 @@ const Facilities = () => {
     setDialogOpen(false);
   };
 
-  const handleAddFacility = () => {
-    console.log('Adding facility:', facilityName);
-    handleCloseDialog();
-  };
+ 
   const items = [
     { id: 1, name: 'Item 1', email: 'email1@example.com' },
     { id: 2, name: 'Item 2', email: 'email2@example.com' },
@@ -88,27 +85,8 @@ const Facilities = () => {
             </TableBody>
           </Table>
         </TableContainer>
-    <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
-          <DialogTitle>Add Facility Name</DialogTitle>
-          <Divider />
-          <DialogContent>
-            <TextField
-              label="Facility Name"
-              variant="outlined"
-              fullWidth
-              value={facilityName}
-              onChange={(e) => setFacilityName(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleAddFacility} color="primary" variant="contained">
-              Add
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <AddFacility open={isDialogOpen} close={()=>setDialogOpen(false)} />
+   
       </StyledRoot>
     </Page>
   )
