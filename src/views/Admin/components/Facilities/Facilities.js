@@ -3,7 +3,8 @@ import Page from '../../../../components/page'
 import { Box, Button, styled,
   List, ListItem, ListItemText, ListItemSecondaryAction, 
   IconButton, Typography, Divider, useTheme, Tooltip,
-  Dialog, DialogTitle,DialogActions,TextField, DialogContent 
+  Dialog, DialogTitle,DialogActions,TextField, DialogContent,
+  Table,TableHead,TableContainer,TableRow, TableCell,TableBody 
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -37,9 +38,9 @@ const Facilities = () => {
     handleCloseDialog();
   };
   const items = [
-    { id: 1, name: 'Item 1' },
-    { id: 2, name: 'Item 2' },
-    { id: 3, name: 'Item 3' },
+    { id: 1, name: 'Item 1', email: 'email1@example.com' },
+    { id: 2, name: 'Item 2', email: 'email2@example.com' },
+    { id: 3, name: 'Item 3', email: 'email3@example.com' },
   ];
   return (
     <Page
@@ -54,34 +55,39 @@ const Facilities = () => {
               All Facilities Names
             </Typography>
           </Box>
-          <List>
-      {items.map((item) => (
-        <>
-        <ListItem key={item.id} className={classes.listItemHover}>
-          <ListItemText primary={item.name} />
-          <ListItemSecondaryAction>
-            <Tooltip
-            title="Edit Name"
-            >
-            <IconButton edge="end" aria-label="Edit">
-              <EditIcon 
-              sx={{color:theme.palette.primary.main}}
-              />
-            </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete Name">
-            <IconButton edge="end" aria-label="Delete">
-              <DeleteIcon 
-              sx={{color:theme.palette.primary.main}}
-              />
-            </IconButton>
-              </Tooltip>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Divider />
-        </>
-      ))}
-    </List>
+          <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Id</TableCell>
+                <TableCell>Facility Name</TableCell>
+                <TableCell>Facility Email</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.id}</TableCell>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.email}</TableCell>
+                  <TableCell>
+                    <Tooltip title="Edit Name">
+                      <IconButton edge="end" aria-label="Edit">
+                        <EditIcon sx={{ color: theme.palette.primary.main }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete Name">
+                      <IconButton edge="end" aria-label="Delete">
+                        <DeleteIcon sx={{ color: theme.palette.primary.main }} />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
     <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
           <DialogTitle>Add Facility Name</DialogTitle>
           <Divider />

@@ -137,7 +137,7 @@ const Dashboard = () => {
             <Box sx={{display:'flex', justifyContent:'center',}}>
               <Avatar src='/assets/images/admin.webp' sx={{height:'120px', width:'120px', mt:'2rem'}} />
             </Box>
-            <Typography sx={{color:'#fff', textAlign:'center'}} variant='h6' gutterBottom> Admin </Typography>
+            <Typography sx={{color:'#fff', textAlign:'center'}} variant='h6' gutterBottom> Super Admin </Typography>
             <Divider /> 
             <Box sx={{p:1}}>
               <Typography sx={{color:'#fff', fontSize:'15px', mt:1 }}> Admin Dashboard</Typography>
@@ -235,7 +235,7 @@ const Dashboard = () => {
             </Box>
           </Box>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, }}>
+        <Box component="main" sx={{ flexGrow: 1, }}>
         <Toolbar /> 
           <Outlet /> 
         </Box>

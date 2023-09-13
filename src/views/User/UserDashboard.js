@@ -20,6 +20,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ReceiptIcon from '@mui/icons-material/Receipt';
 const useStyles = makeStyles((theme) => ({
   selected: {
     background: "#002448",
@@ -45,6 +46,12 @@ const UserDashboard = () => {
     },
     {
       id: 2,
+      title: "Invoices",
+      icon: <ReceiptIcon />,
+      to: "/user/invoices",
+    },
+    {
+      id: 3,
       title: "Facilities",
       icon: <LocationOnIcon />,
       to: "/user/facilities",
