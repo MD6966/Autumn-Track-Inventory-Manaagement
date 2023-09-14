@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddVendor from './components/AddVendor';
 
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Vendors = () => {
+  const [open , setOpen] = React.useState(false)
   const classes = useStyles();
   const theme = useTheme()
   const vendors = [
@@ -29,7 +31,9 @@ const Vendors = () => {
     title="Vendors"
     >
       <StyledRoot>
-      <Button variant='contained' endIcon={<AddCircleIcon />} sx={{mb:2}}>
+      <Button variant='contained' endIcon={<AddCircleIcon />} sx={{mb:2}}
+      onClick={()=>setOpen(true)}
+      >
             Add Vendor
           </Button>
         <TableContainer component={Paper}>
@@ -71,6 +75,7 @@ const Vendors = () => {
         </TableBody>
       </Table>
     </TableContainer>
+    <AddVendor open={open} close={()=>setOpen(false)} />
       </StyledRoot>
     </Page>
   )

@@ -28,7 +28,7 @@ export const adminLogin = ({ email, password }) => async (dispatch) => {
   };
 
   try {
-    const res = await axios.get(`${process.env.REACT_APP_URL}api/login?email=${email}&password=${password}`, {
+    const res = await axios.post(`${process.env.REACT_APP_URL}api/login`, body, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -51,4 +51,60 @@ export const adminLogOut = () => (dispatch) => {
     dispatch({
         type: 'LOGOUT_SUUCCESS'
       });
+    }
+
+    export const  addFacility = (body) => async (dispatch) => {
+      try{
+        const res = await api.post('api/facility', body)
+        dispatch({
+          type:'ADD_FACILITY',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+    export const  getFacilities = (body) => async (dispatch) => {
+      try{
+        const res = await api.get('api/facilities')
+        dispatch({
+          type:'GET_FACILITIES',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+    export const  getCategories = () => async (dispatch) => {
+      try{
+        const res = await api.get('api/category')
+        dispatch({
+          type:'GET_CATEGORIES',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+    export const  addCategory = (body) => async (dispatch) => {
+      try{
+        const res = await api.post('api/category')
+        dispatch({
+          type:'GET_CATEGORIES',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
     }

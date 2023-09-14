@@ -39,7 +39,9 @@ const AdminLoginForm = () => {
             }
         }).catch((err)=> {
           setLoading(false)
-          console.log(err)
+          enqueueSnackbar(err.response.data.message, {
+            variant:'error'
+          })
         })
     }
     

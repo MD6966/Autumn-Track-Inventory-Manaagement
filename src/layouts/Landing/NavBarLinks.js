@@ -1,5 +1,6 @@
 import { Button, styled } from '@mui/material'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Outlet } from 'react-router-dom/dist'
 const StyledButton = styled(Button)(({theme})=> ({
@@ -22,17 +23,35 @@ const StyledRegister = styled(Button)(({theme})=> ({
 }))
 
 const NavBarLinks = () => {
+  const isAuthenticated = useSelector((state)=>state.admin.isAuthenticated)
+  // console.log(isAuthenticated)
   return (
     <div>
+      {
+        isAuthenticated ?
+        <StyledButton
+      component={Link}
+      to="/admin/dashboard"
+      >
+        Go To Dashboard
+      </StyledButton> :
       <StyledButton
       component={Link}
       to="/admin-login"
       >
         Login
       </StyledButton>
-      <StyledRegister variant='outlined'>
+
+      }
+      {
+        isAuthenticated ?
+        null :
+        <StyledRegister variant='outlined'>
         Register
       </StyledRegister>
+      }
+      
+      
       {/* <Button variant='contained'
       component={Link}
       to='/home'

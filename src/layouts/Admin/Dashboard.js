@@ -19,6 +19,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CategoryIcon from '@mui/icons-material/Category';
 import PeopleIcon from '@mui/icons-material/People';
+import { adminLogOut } from '../../store/actions/adminActions';
 const useStyles = makeStyles((theme)=> ({
     selected : {
       background:'#fcbd6a',
@@ -77,7 +78,7 @@ const Dashboard = () => {
             {
               label: 'Yes',
               onClick: ()=>{
-                // dispatch(adminLogOut())
+                dispatch(adminLogOut())
                 navigate('/',{ replace: true})
               }
             },
@@ -128,6 +129,7 @@ const Dashboard = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
+        // zIndex:-1,
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: 'border-box',

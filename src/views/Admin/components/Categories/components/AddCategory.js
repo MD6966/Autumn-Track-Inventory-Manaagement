@@ -1,11 +1,12 @@
 import React from 'react'
 import { Dialog,DialogTitle,Divider,DialogContent,Typography,TextField,
-Button,DialogActions
-} from '@mui/material'
-import { useDispatch } from 'react-redux'
-import { addFacility } from '../../../../../store/actions/adminActions'
+    Button,DialogActions
+    } from '@mui/material'
+    import { useDispatch } from 'react-redux'
+import { addCategory } from '../../../../../store/actions/adminActions'
 
-const AddFacility = (props) => {
+
+const AddCategory = (props) => {
     const dispatch = useDispatch()
     const initialValues ={
         name:'',
@@ -18,7 +19,7 @@ const AddFacility = (props) => {
     }
     const handleSubmit = (e) => {
         e.preventDefault()
-        dispatch(addFacility(formValues)).then((result) => {
+        dispatch(addCategory(formValues)).then((result) => {
             console.log(result)
         }).catch((err) => {
             console.log(err)
@@ -27,13 +28,13 @@ const AddFacility = (props) => {
 
   return (
     <div>
-       <Dialog open={props.open} onClose={props.close}>
+     <Dialog open={props.open} onClose={props.close}>
             <form onSubmit={handleSubmit}>
-          <DialogTitle>Add Facility Name</DialogTitle>
+          <DialogTitle>Add Category</DialogTitle>
           <Divider />
           <DialogContent>
             <TextField
-              label="Facility Name"
+              label="Category Name"
               variant="outlined"
               fullWidth
               name="name"
@@ -69,4 +70,4 @@ const AddFacility = (props) => {
   )
 }
 
-export default AddFacility
+export default AddCategory
