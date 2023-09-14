@@ -1,49 +1,52 @@
 import React from 'react'
 import { Dialog,DialogTitle,Divider,DialogContent,Typography,TextField,
-    Button,DialogActions
-    } from '@mui/material'
-    import { useDispatch } from 'react-redux'
-import { addCategory } from '../../../../../store/actions/adminActions'
+Button,DialogActions,
+} from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { addFacility } from '../../../../../store/actions/adminActions'
 import { RotatingLines } from 'react-loader-spinner'
 import { useSnackbar } from 'notistack'
-
-const AddCategory = (props) => {
+const EditFacility = (props) => {
+    console.log(...props.data)
+    React.useEffect(()=> {
+        // setFormValues(...props.data)
+    }, [props.data])
     const dispatch = useDispatch()
-    const [loading, setLoading] = React.useState(false)
-    const{enqueueSnackbar} = useSnackbar()
     const initialValues ={
         name:'',
+        email:''
     }
     const [formValues,setFormValues] = React.useState(initialValues)
+    const [loading, setLoading] = React.useState(false)
+    const {enqueueSnackbar} = useSnackbar()
     const handleChange = (e) => {
         const {name, value} = e.target
         setFormValues({...formValues, [name]:value})
     }
     const handleSubmit = (e) => {
-      setLoading(true) 
-      e.preventDefault()
-        dispatch(addCategory(formValues)).then((result) => {
-          setLoading(false)  
-          enqueueSnackbar(result.data.message, {
-            variant:'success'
-          })
-          setFormValues(initialValues)
-          props.onCreateSuccess()
+        setLoading(true)
+        e.preventDefault()
+        dispatch(addFacility(formValues)).then((result) => {
+            setLoading(false)
+            setFormValues(initialValues)
+            enqueueSnackbar(result.data.message, {
+                variant:'success'
+            })
+            props.onCreateSuccess()
         }).catch((err) => {
-          setLoading(false)
+            setLoading(false)
             console.log(err)
         });
     }
-
   return (
     <div>
-     <Dialog open={props.open} onClose={props.close}>
+      <Dialog open={props.open} onClose={props.close}>
             <form onSubmit={handleSubmit}>
-          <DialogTitle>Add Category</DialogTitle>
+          <DialogTitle>Edit Facility</DialogTitle>
           <Divider />
           <DialogContent>
             <TextField
-              label="Category Name"
+              label="Facility Name"
               variant="outlined"
               fullWidth
               name="name"
@@ -51,6 +54,16 @@ const AddCategory = (props) => {
               onChange={handleChange}
               required
               />
+            <TextField 
+            required
+            type='email'
+            label="Email"
+            fullWidth
+            name='email'
+            value={formValues.email}
+            onChange={handleChange}
+            sx={{mt:2}}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={props.close} color="primary">
@@ -66,7 +79,7 @@ const AddCategory = (props) => {
           <Button
           type='submit'
           variant='contained'
-          > Add </Button>
+          > Update </Button>
         }
           </DialogActions>
                 </form>
@@ -75,4 +88,4 @@ const AddCategory = (props) => {
   )
 }
 
-export default AddCategory
+export default EditFacility

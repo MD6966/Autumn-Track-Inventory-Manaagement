@@ -3,22 +3,24 @@ import { Dialog,DialogTitle,Divider,DialogContent,Typography,TextField,
     Button,DialogActions
     } from '@mui/material'
     import { useDispatch } from 'react-redux'
-    import { addFacility } from '../../../../../store/actions/adminActions'
     import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
+import {addVendor } from '../../../../../store/actions/adminActions';
+import { useSnackbar } from 'notistack';
+import { RotatingLines } from 'react-loader-spinner';
 const AddVendor = (props) => {
     const initialValues ={
         name:'',
         email:'',
-        category:''
+        category_id:''
     }
     const dispatch = useDispatch()
-    const [C, setC] = React.useState('');
+    const [loading, setLoading] = React.useState(false)
+    const {enqueueSnackbar} = useSnackbar()
   const handleChangeC = (event) => {
-    setFormValues({...formValues, category :event.target.value})
+    setFormValues({...formValues, category_id :event.target.value})
   };
     const [formValues,setFormValues] = React.useState(initialValues)
     const handleChange = (e) => {
@@ -26,10 +28,17 @@ const AddVendor = (props) => {
         setFormValues({...formValues, [name]:value})
     }
     const handleSubmit = (e) => {
+        setLoading(true)
         e.preventDefault()
-        dispatch(addFacility(formValues)).then((result) => {
-            console.log(result)
+        dispatch(addVendor(formValues)).then((result) => {
+          setLoading(false)
+          setFormValues(initialValues)
+          props.onCreateSuccess()  
+          enqueueSnackbar(result.data.message, {
+              variant:'success'
+            })
         }).catch((err) => {
+          setLoading(false)
             console.log(err)
         });
     }
@@ -65,14 +74,18 @@ const AddVendor = (props) => {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={formValues.category}
+          value={formValues.category_id}
           label="Category"
           name="category"
           onChange={handleChangeC}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {
+            props.data.map((val,ind)=>{
+              return(
+                <MenuItem value={val.id}>{val.name}</MenuItem>
+              )
+            })
+          }
         </Select>
       </FormControl>
           </DialogContent>
@@ -80,12 +93,18 @@ const AddVendor = (props) => {
             <Button onClick={props.close} color="primary">
               Cancel
             </Button>
-            <Button 
-             color="primary" variant="contained"
-            type='submit'
-            >
-              Add
-            </Button>
+            {
+          loading ? <Button type='submit' variant='disabled'>    <RotatingLines
+          strokeColor="#002448"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="30"
+          visible={loading}/> </Button> :
+          <Button
+          type='submit'
+          variant='contained'
+          > Add </Button>
+        }
           </DialogActions>
                 </form>
         </Dialog>

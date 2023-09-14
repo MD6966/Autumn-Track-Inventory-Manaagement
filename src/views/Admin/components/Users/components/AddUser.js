@@ -1,50 +1,57 @@
 import React from 'react'
 import { Dialog,DialogTitle,Divider,DialogContent,Typography,TextField,
-Button,DialogActions
-} from '@mui/material'
-import { useDispatch } from 'react-redux'
-import { addFacility } from '../../../../../store/actions/adminActions'
-import { RotatingLines } from 'react-loader-spinner'
+    Button,DialogActions,FormControl,InputLabel,Select,MenuItem
+    } from '@mui/material'
+    import { useDispatch } from 'react-redux'
+import {addUser } from '../../../../../store/actions/adminActions'
 import { useSnackbar } from 'notistack'
-
-const AddFacility = (props) => {
+import { RotatingLines } from 'react-loader-spinner'
+const AddUser = (props) => {
+  const arr = Object.keys(props.data).map((key) => ({
+    key,
+    value: props.data[key],
+  }));
     const dispatch = useDispatch()
     const initialValues ={
         name:'',
-        email:''
+        email:'',
+        password:'',
+        role:''
     }
     const [formValues,setFormValues] = React.useState(initialValues)
-    const [loading, setLoading] = React.useState(false)
     const {enqueueSnackbar} = useSnackbar()
+    const [loading, setLoading] = React.useState(false)
+    const handleChangeR = (event) => {
+      setFormValues({...formValues, role :event.target.value})
+    };
     const handleChange = (e) => {
         const {name, value} = e.target
         setFormValues({...formValues, [name]:value})
     }
     const handleSubmit = (e) => {
-        setLoading(true)
+      setLoading(true)
         e.preventDefault()
-        dispatch(addFacility(formValues)).then((result) => {
-            setLoading(false)
-            setFormValues(initialValues)
-            enqueueSnackbar(result.data.message, {
-                variant:'success'
+        dispatch(addUser(formValues)).then((result) => {
+          setLoading(false)
+          setFormValues(initialValues)  
+          enqueueSnackbar(result.data.message, {
+              variant:'success'
             })
             props.onCreateSuccess()
         }).catch((err) => {
-            setLoading(false)
+          setLoading(false)
             console.log(err)
         });
     }
-
   return (
     <div>
-       <Dialog open={props.open} onClose={props.close}>
+      <Dialog open={props.open} onClose={props.close}>
             <form onSubmit={handleSubmit}>
-          <DialogTitle>Add Facility Name</DialogTitle>
+          <DialogTitle>Add User</DialogTitle>
           <Divider />
           <DialogContent>
             <TextField
-              label="Facility Name"
+              label="Name"
               variant="outlined"
               fullWidth
               name="name"
@@ -62,6 +69,35 @@ const AddFacility = (props) => {
             onChange={handleChange}
             sx={{mt:2}}
             />
+             <TextField 
+            required
+            label="Password"
+            fullWidth
+            name='password'
+            value={formValues.password}
+            onChange={handleChange}
+            sx={{mt:2, mb:2}}
+            />
+            <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Role</InputLabel>
+        <Select
+          required
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={formValues.role}
+          label="Role"
+          name="role"
+          onChange={handleChangeR}
+        >
+          {
+            arr.map((val,ind)=>{
+              return(
+                <MenuItem value={val.key}>{val.value}</MenuItem>
+              )
+            })
+          }
+        </Select>
+      </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={props.close} color="primary">
@@ -86,4 +122,4 @@ const AddFacility = (props) => {
   )
 }
 
-export default AddFacility
+export default AddUser

@@ -1,7 +1,6 @@
 import React from 'react'
 import Page from '../../../../components/page'
 import { Box, Card, CardHeader, Divider, Grid, Paper, Typography, styled,
-  Table,TableHead,TableContainer,TableRow, TableCell,TableBody 
 } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CategoryIcon from '@mui/icons-material/Category';

@@ -11,8 +11,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import { useDispatch } from 'react-redux';
-import { getCategories } from '../../../../store/actions/adminActions';
+import { deleteCategory, getCategories } from '../../../../store/actions/adminActions';
 import AddCategory from './components/AddCategory';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useSnackbar } from 'notistack';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -28,6 +31,7 @@ const Categories = () => {
   const theme = useTheme()
   const [data, setData] = React.useState([])
   const [open, setOpen] = React.useState(false)
+  const {enqueueSnackbar} = useSnackbar()
   const dispatch = useDispatch()
   const items = [
     { id: 1, name: 'Item 1', email: 'email1@example.com' },
@@ -36,7 +40,7 @@ const Categories = () => {
   ];
   const getAllCategories = () => {
     dispatch(getCategories()).then((result) => {
-      console.log(result)
+      setData(result.data.data)
     }).catch((err) => {
       console.log(err)
     });
@@ -44,6 +48,38 @@ const Categories = () => {
   React.useEffect(() => {
     getAllCategories()
   },[])
+  const handleCreateSuccess = () => {
+    setOpen(false);
+    getAllCategories()
+  };
+  const handleEdit =() => {
+
+  }
+  const handleDelete = (id) => {
+    confirmAlert({
+      title: 'Delete?',
+      message: 'Are you sure to want to delete ?',
+      buttons:[
+        {
+          label: 'Yes',
+          onClick: ()=>{
+            dispatch(deleteCategory(id)).then((result) => {
+              enqueueSnackbar(result.data.message, {
+                variant:'success'
+              })
+              getAllCategories()
+            }).catch((err) => {
+              console.log(err)
+            });
+          }
+        },
+       {
+        label: 'No',
+       }
+
+      ]
+    })
+  }
   return (
     <Page
     title="Categories"
@@ -63,7 +99,7 @@ const Categories = () => {
               <TableRow>
                 <TableCell>Id</TableCell>
                 <TableCell>Category Name</TableCell>
-                <TableCell>Email</TableCell>
+
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -72,16 +108,21 @@ const Categories = () => {
                 <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.email}</TableCell>
+               
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
-                        <EditIcon sx={{ color: theme.palette.primary.main }} />
+                        <EditIcon sx={{ color: theme.palette.primary.main }} 
+                         onClick={()=>handleEdit(item.id)}
+                                                  />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Name">
                       <IconButton edge="end" aria-label="Delete">
-                        <DeleteIcon sx={{ color: theme.palette.primary.main }} />
+                        <DeleteIcon sx={{ color: theme.palette.primary.main }} 
+                        onClick={()=> handleDelete(item.id)}
+                        
+                        />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -90,7 +131,7 @@ const Categories = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <AddCategory open={open} close={()=>setOpen(false)} />
+        <AddCategory open={open} close={()=>setOpen(false)} onCreateSuccess={handleCreateSuccess}/>
         {
           data.length < 1 && <>
           <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />

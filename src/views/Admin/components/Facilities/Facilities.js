@@ -12,7 +12,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import AddFacility from './components/AddFacility';
 import { useDispatch } from 'react-redux';
-import { getFacilities } from '../../../../store/actions/adminActions';
+import { deleteFacility, getFacilities, getFacility } from '../../../../store/actions/adminActions';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useSnackbar } from 'notistack';
+import EditFacility from './components/EditFacility';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -27,16 +31,15 @@ const Facilities = () => {
   const classes = useStyles();
   const theme = useTheme()
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = React.useState(false)
+  const [fOpen, setFopen] = React.useState(false)
   const [fData, setFdata] = React.useState([])
+  const [uData, setUdata] = React.useState([])
+  const {enqueueSnackbar} = useSnackbar()
   const dispatch = useDispatch()
   const handleOpenDialog = () => {
     setDialogOpen(true);
   };
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-  };
-
  
   const items = [
     { id: 1, name: 'Item 1', email: 'email1@example.com' },
@@ -45,7 +48,6 @@ const Facilities = () => {
   ];
   const getAllFacilities = () => {
     dispatch(getFacilities()).then((result) => {
-      console.log(result)
       setFdata(result.data.data)
     }).catch((err) => {
       console.log(err)
@@ -54,6 +56,43 @@ const Facilities = () => {
   React.useEffect(()=> {
     getAllFacilities()
   }, [])
+  const handleCreateSuccess = () => {
+    setDialogOpen(false);
+    getAllFacilities()
+  };
+  const handleEdit =(id) => {
+    dispatch(getFacility(id)).then((result) => {
+      setUdata(result.data.data)
+    }).catch((err) => {
+      console.log(err)
+    });
+    setFopen(true)
+  }
+  const handleDelete = (id) => {
+    confirmAlert({
+      title: 'Delete?',
+      message: 'Are you sure to want to delete ?',
+      buttons:[
+        {
+          label: 'Yes',
+          onClick: ()=>{
+            dispatch(deleteFacility(id)).then((result) => {
+              enqueueSnackbar(result.data.message, {
+                variant:'success'
+              })
+              getAllFacilities()
+            }).catch((err) => {
+              console.log(err)
+            });
+          }
+        },
+       {
+        label: 'No',
+       }
+
+      ]
+    })
+  }
   return (
     <Page
     title="Facilities"
@@ -87,12 +126,17 @@ const Facilities = () => {
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
-                        <EditIcon sx={{ color: theme.palette.primary.main }} />
+                        <EditIcon sx={{ color: theme.palette.primary.main }} 
+                          onClick={()=>handleEdit(item.id)}
+
+                        />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Name">
                       <IconButton edge="end" aria-label="Delete">
-                        <DeleteIcon sx={{ color: theme.palette.primary.main }} />
+                        <DeleteIcon sx={{ color: theme.palette.primary.main }} 
+                        onClick={()=> handleDelete(item.id)}
+                        />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -109,8 +153,8 @@ const Facilities = () => {
 
           </>
         }
-        <AddFacility open={isDialogOpen} close={()=>setDialogOpen(false)} />
-        
+        <AddFacility open={isDialogOpen} close={()=>setDialogOpen(false)} onCreateSuccess={handleCreateSuccess}  />
+        <EditFacility open={fOpen} close={()=>setFopen(false)} data={uData} />
         
       </StyledRoot>
     </Page>

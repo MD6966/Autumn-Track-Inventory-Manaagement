@@ -53,9 +53,26 @@ export const adminLogOut = () => (dispatch) => {
       });
     }
 
+// ---------------ROLES-------------------------
+export const  getRoles = () => async (dispatch) => {
+  try{
+    const res = await api.get('api/getAllRoles')
+    dispatch({
+      type:'GET_ROLES',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+//----------------FACILITEIS---------------------
+
     export const  addFacility = (body) => async (dispatch) => {
       try{
-        const res = await api.post('api/facility', body)
+        const res = await api.post('api/facilities', body)
         dispatch({
           type:'ADD_FACILITY',
           payload:res.data
@@ -67,7 +84,7 @@ export const adminLogOut = () => (dispatch) => {
       }
     }
 
-    export const  getFacilities = (body) => async (dispatch) => {
+    export const  getFacilities = () => async (dispatch) => {
       try{
         const res = await api.get('api/facilities')
         dispatch({
@@ -81,9 +98,41 @@ export const adminLogOut = () => (dispatch) => {
       }
     }
 
+    export const  getFacility = (id) => async (dispatch) => {
+      try{
+        const res = await api.get(`api/facilities/${id}`)
+        dispatch({
+          type:'GET_FACILITY',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+    export const  deleteFacility = (id) => async (dispatch) => {
+      console.log(id)
+      try{
+        const res = await api.delete(`api/facilities/${id}`)
+        dispatch({
+          type:'DEL_FACILITY',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+
+  // ---------------CATEGORIES-------------------
+
     export const  getCategories = () => async (dispatch) => {
       try{
-        const res = await api.get('api/category')
+        const res = await api.get('api/categories')
         dispatch({
           type:'GET_CATEGORIES',
           payload:res.data
@@ -97,9 +146,9 @@ export const adminLogOut = () => (dispatch) => {
 
     export const  addCategory = (body) => async (dispatch) => {
       try{
-        const res = await api.post('api/category')
+        const res = await api.post('api/categories', body)
         dispatch({
-          type:'GET_CATEGORIES',
+          type:'ADD_CATEGORIES',
           payload:res.data
         })
           return res
@@ -108,3 +157,91 @@ export const adminLogOut = () => (dispatch) => {
         throw err
       }
     }
+
+    export const  deleteCategory = (id) => async (dispatch) => {
+      console.log(id)
+      try{
+        const res = await api.delete(`api/categories/${id}`)
+        dispatch({
+          type:'DEL_CATEGORY',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+// ----------VENDORS---------------
+    export const  getVendors = () => async (dispatch) => {
+      try{
+        const res = await api.get('api/vendors')
+        dispatch({
+          type:'GET_VENDORS',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+     export const  addVendor = (body) => async (dispatch) => {
+     try{
+        const res = await api.post('api/vendors', body)
+        dispatch({
+          type:'ADD_CATEGORIES',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+    export const  deleteVendor = (id) => async (dispatch) => {
+      console.log(id)
+      try{
+        const res = await api.delete(`api/vendors/${id}`)
+        dispatch({
+          type:'DEL_VENDOR',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+//-------------USERS-------------------
+
+export const  getUsers = () => async (dispatch) => {
+  try{
+    const res = await api.get('api/users')
+    dispatch({
+      type:'GET_USERS',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  addUser = (body) => async (dispatch) => {
+  try{
+     const res = await api.post('api/users', body)
+     dispatch({
+       type:'ADD_USER',
+       payload:res.data
+     })
+       return res
+   }
+   catch(err) {
+     throw err
+   }
+ }
