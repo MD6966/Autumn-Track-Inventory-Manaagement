@@ -8,6 +8,9 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import GroupIcon from '@mui/icons-material/Group';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import ApprovalIcon from '@mui/icons-material/Approval';
+import { useDispatch } from 'react-redux';
+import { getDashboardCounts } from '../../../../store/actions/adminActions';
+import { useSpring, animated } from 'react-spring';
 const StyledRoot = styled(Box)(({theme})=> ({
   minHeight:'100vh',
   background:'#e2e2e2',
@@ -24,18 +27,39 @@ const StyledCard = styled(Card)(({theme})=> ({
   padding:theme.spacing(2)
 }))
 
-const CardData = [
-  {id:1, title:'Total Facilities', value:3, icon:<LocationOnIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
-  {id:2, title:'Total Categories', value:15, icon:<CategoryIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
-  {id:3, title:'Total Vendors', value:8, icon:<AdminPanelSettingsIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
-  {id:4, title:'Total Users', value:61, icon:<GroupIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
-  {id:5, title:'Total Invoices', value:105, icon:<ReceiptIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
-  {id:6, title:'Pending Approvals', value:12, icon:<ApprovalIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
 
-
-  
-]
 const DashboardAdmin = () => {
+  const [counts, setCounts] = React.useState([])
+  const dispatch = useDispatch()
+  const getCounts = () => {
+    dispatch(getDashboardCounts()).then((result) => {
+      setCounts(result.data.data)
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
+  React.useEffect(()=> {
+    getCounts()
+  },[])
+  const CardData = [
+    {id:1, title:'Total Facilities', value:counts.facilities, icon:<LocationOnIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
+    {id:2, title:'Total Categories', value:counts.categories, icon:<CategoryIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
+    {id:3, title:'Total Vendors', value:counts.vendors, icon:<AdminPanelSettingsIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
+    {id:4, title:'Total Users', value:counts.users, icon:<GroupIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
+    {id:5, title:'Total Invoices', value:counts.invoices, icon:<ReceiptIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
+    {id:6, title:'Pending Approvals', value:counts.pending_invoices, icon:<ApprovalIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>},
+  
+  
+    
+  ]
+  const AnimatedText = ({ value }) => {
+    const springProps = useSpring({
+      opacity: 1,
+      from: { opacity: 0 },
+    });
+  
+    return <animated.span style={springProps}>{value}</animated.span>;
+  };
   return (
     <Page
     title="Dashboard"
@@ -59,7 +83,7 @@ const DashboardAdmin = () => {
                  fontWeight="bold" 
                  variant='h4'
                  >
-                    {val.value}
+                     <AnimatedText value={val.value} />
                  </Typography>
                  <Typography sx={{color:'#fff', mt:1}} >
                   {val.title}

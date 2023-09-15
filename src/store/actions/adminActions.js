@@ -126,7 +126,19 @@ export const  getRoles = () => async (dispatch) => {
         throw err
       }
     }
-
+    export const  updateFacility = (body,id) => async (dispatch) => {
+      try{
+        const res = await api.put(`api/facilities/${id}`, body)
+        dispatch({
+          type:'UPDATE_FACILITY',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
 
   // ---------------CATEGORIES-------------------
 
@@ -164,6 +176,32 @@ export const  getRoles = () => async (dispatch) => {
         const res = await api.delete(`api/categories/${id}`)
         dispatch({
           type:'DEL_CATEGORY',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+    export const  getCategory = (id) => async (dispatch) => {
+      try{
+        const res = await api.get(`api/categories/${id}`)
+        dispatch({
+          type:'GET_CATEGORY',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+    export const  updateCategory = (body,id) => async (dispatch) => {
+      try{
+        const res = await api.put(`api/categories/${id}`, body)
+        dispatch({
+          type:'UPDATE_CATEGORY',
           payload:res.data
         })
           return res
@@ -215,6 +253,33 @@ export const  getRoles = () => async (dispatch) => {
         throw err
       }
     }
+    export const  getVendor = (id) => async (dispatch) => {
+      try{
+        const res = await api.get(`api/vendors/${id}`)
+        dispatch({
+          type:'GET_VENDOR',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
+
+    export const  updateVendor = (body,id) => async (dispatch) => {
+      try{
+        const res = await api.put(`api/vendors/${id}`, body)
+        dispatch({
+          type:'UPDATE_VENDOR',
+          payload:res.data
+        })
+          return res
+      }
+      catch(err) {
+        throw err
+      }
+    }
 
 //-------------USERS-------------------
 
@@ -245,3 +310,62 @@ export const  addUser = (body) => async (dispatch) => {
      throw err
    }
  }
+
+ export const  deleteUser = (id) => async (dispatch) => {
+  try{
+    const res = await api.delete(`api/users/${id}`)
+    dispatch({
+      type:'DEL_USER',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  getUser = (id) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/users/${id}`)
+    dispatch({
+      type:'GET_USER',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+export const  updateUser = (body,id) => async (dispatch) => {
+  try{
+    const res = await api.put(`api/users/${id}`, body)
+    dispatch({
+      type:'UPDATE_USER',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+
+//--------------DAHSBOARD COUNT--------------
+
+
+export const  getDashboardCounts = () => async (dispatch) => {
+  try{
+    const res = await api.get('api/getDashboardCounts')
+    dispatch({
+      type:'GET_COUNTS',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}

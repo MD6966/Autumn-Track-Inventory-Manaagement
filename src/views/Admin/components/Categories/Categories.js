@@ -1,21 +1,21 @@
 import React from 'react'
 import Page from '../../../../components/page'
-import { Box, Button, styled,
-  List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, 
+import { Box, Button, styled, IconButton, 
   Typography, Divider, useTheme, Tooltip,
-  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton 
-
+  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton, 
+  Dialog,DialogTitle,DialogContent,TextField,DialogActions
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import { useDispatch } from 'react-redux';
-import { deleteCategory, getCategories } from '../../../../store/actions/adminActions';
+import { deleteCategory, getCategories, getCategory, updateCategory } from '../../../../store/actions/adminActions';
 import AddCategory from './components/AddCategory';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useSnackbar } from 'notistack';
+import { RotatingLines } from 'react-loader-spinner';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -27,17 +27,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Categories = () => {
+    const [loading, setLoading] = React.useState(false)
+    const initialValues ={
+        name:'',
+    }
+    const [formValues,setFormValues] = React.useState(initialValues)
+    const handleChange = (e) => {
+        const {name, value} = e.target
+        setFormValues({...formValues, [name]:value})
+    }
   const classes = useStyles();
   const theme = useTheme()
   const [data, setData] = React.useState([])
   const [open, setOpen] = React.useState(false)
+  const[editDialog, setEditDialog] = React.useState(false)
+  const[id, setId] = React.useState('')
   const {enqueueSnackbar} = useSnackbar()
   const dispatch = useDispatch()
-  const items = [
-    { id: 1, name: 'Item 1', email: 'email1@example.com' },
-    { id: 2, name: 'Item 2', email: 'email2@example.com' },
-    { id: 3, name: 'Item 3', email: 'email3@example.com' },
-  ];
   const getAllCategories = () => {
     dispatch(getCategories()).then((result) => {
       setData(result.data.data)
@@ -52,8 +58,14 @@ const Categories = () => {
     setOpen(false);
     getAllCategories()
   };
-  const handleEdit =() => {
-
+  const handleEdit =(id) => {
+    setId(id)
+    setEditDialog(true)
+    dispatch(getCategory(id)).then((result) => {
+      setFormValues(...result.data.data)
+    }).catch((err) => {
+      console.log(err)
+    });
   }
   const handleDelete = (id) => {
     confirmAlert({
@@ -79,6 +91,22 @@ const Categories = () => {
 
       ]
     })
+  }
+  const handleSubmit = (e) => {
+    setLoading(true) 
+    e.preventDefault()
+      dispatch(updateCategory(formValues, id)).then((result) => {
+        setLoading(false)  
+        enqueueSnackbar(result.data.message, {
+          variant:'success'
+        })
+        setFormValues(initialValues)
+        getAllCategories()
+        setEditDialog(false)
+      }).catch((err) => {
+        setLoading(false)
+          console.log(err)
+      });
   }
   return (
     <Page
@@ -141,6 +169,42 @@ const Categories = () => {
           </>
         }
       </StyledRoot>
+
+      {/* --------------UPDATE CATEGORY--------------  */}
+      <Dialog open={editDialog} onClose={()=>setEditDialog(false)}>
+            <form onSubmit={handleSubmit}>
+          <DialogTitle>Add Category</DialogTitle>
+          <Divider />
+          <DialogContent>
+            <TextField
+              label="Category Name"
+              variant="outlined"
+              fullWidth
+              name="name"
+              value={formValues.name}
+              onChange={handleChange}
+              required
+              />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setEditDialog(false)} color="primary">
+              Cancel
+            </Button>
+            {
+          loading ? <Button type='submit' variant='disabled'>    <RotatingLines
+          strokeColor="#002448"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="30"
+          visible={loading}/> </Button> :
+          <Button
+          type='submit'
+          variant='contained'
+          > Add </Button>
+        }
+          </DialogActions>
+                </form>
+        </Dialog>
     </Page>
   )
 }

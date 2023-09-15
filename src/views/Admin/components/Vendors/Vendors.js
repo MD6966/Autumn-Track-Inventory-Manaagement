@@ -1,6 +1,10 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, 
-  TableHead, TableRow, Paper, IconButton, Tooltip, styled, Box, Button, useTheme, Skeleton } from '@mui/material';
+  TableHead, TableRow, Paper, IconButton, Tooltip, 
+  styled, Box, Button, useTheme, Skeleton,
+  Dialog,DialogTitle,Divider,DialogContent,MenuItem,TextField,
+  DialogActions,FormControl,Select,InputLabel
+} from '@mui/material';
 import Page from '../../../../components/page';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,10 +12,11 @@ import { makeStyles } from '@mui/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddVendor from './components/AddVendor';
 import { useDispatch } from 'react-redux';
-import { deleteVendor, getCategories, getVendors } from '../../../../store/actions/adminActions';
+import { deleteVendor, getCategories, getVendor, getVendors, updateVendor } from '../../../../store/actions/adminActions';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useSnackbar } from 'notistack';
+import { RotatingLines } from 'react-loader-spinner';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -24,15 +29,43 @@ const Vendors = () => {
   const [open , setOpen] = React.useState(false)
   const [data, setData] =React.useState([])
   const [cData, setCdata] = React.useState([])
+  const [editDialog, setEditDialog] = React.useState(false)
+  const [id, setId] = React.useState('')
   const dispatch = useDispatch()
   const {enqueueSnackbar} = useSnackbar()
   const classes = useStyles();
   const theme = useTheme()
-  const vendors = [
-    { id: 1, name: 'Vendor 1', category: 'Category A' },
-    { id: 2, name: 'Vendor 2', category: 'Category B' },
-    { id: 3, name: 'Vendor 3', category: 'Category C' },
-  ];
+  const initialValues ={
+    name:'',
+    email:'',
+    category_id:''
+}
+const [loading, setLoading] = React.useState(false)
+const handleChangeC = (event) => {
+setFormValues({...formValues, category_id :event.target.value})
+};
+const [formValues,setFormValues] = React.useState(initialValues)
+const handleChange = (e) => {
+    const {name, value} = e.target
+    setFormValues({...formValues, [name]:value})
+}
+const handleSubmit = (e) => {
+    setLoading(true)
+    e.preventDefault()
+    dispatch(updateVendor(formValues, id)).then((result) => {
+      setLoading(false)
+      setFormValues(initialValues)
+      enqueueSnackbar(result.data.message, {
+          variant:'success'
+        })
+        getAllVendors()
+        setEditDialog(false)
+    }).catch((err) => {
+      setLoading(false)
+        console.log(err)
+    });
+}
+
   const getAllVendors = () => {
     dispatch(getVendors()).then((result) => {
       setData(result.data.data)
@@ -55,8 +88,14 @@ const Vendors = () => {
     setOpen(false);
     getAllVendors()
   };
-  const handleEdit =() => {
-
+  const handleEdit =(id) => {
+    setId(id)
+    setEditDialog(true)
+    dispatch(getVendor(id)).then((result) => {
+      setFormValues(...result.data.data)
+    }).catch((err) => {
+      console.log(err)
+    });
   }
   const handleDelete = (id) => {
     confirmAlert({
@@ -155,6 +194,71 @@ const Vendors = () => {
     data={cData}
     />
       </StyledRoot>
+
+      {/* ----------------UPDATE VENDOR---------------- */}
+      <Dialog open={editDialog} onClose={()=>setEditDialog(false)}>
+            <form onSubmit={handleSubmit}>
+          <DialogTitle>Add Vendor</DialogTitle>
+          <Divider />
+          <DialogContent>
+            <TextField
+              label="Vendor Name"
+              variant="outlined"
+              fullWidth
+              name="name"
+              value={formValues.name}
+              onChange={handleChange}
+              required
+              />
+            <TextField 
+            required
+            type='email'
+            label="Email"
+            fullWidth
+            name='email'
+            value={formValues.email}
+            onChange={handleChange}
+            sx={{mt:2, mb:2}}
+            />
+             <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={formValues.category_id}
+          label="Category"
+          name="category"
+          onChange={handleChangeC}
+        >
+          {
+            cData.map((val,ind)=>{
+              return(
+                <MenuItem value={val.id}>{val.name}</MenuItem>
+              )
+            })
+          }
+        </Select>
+      </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setEditDialog(false)} color="primary">
+              Cancel
+            </Button>
+            {
+          loading ? <Button type='submit' variant='disabled'>    <RotatingLines
+          strokeColor="#002448"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="30"
+          visible={loading}/> </Button> :
+          <Button
+          type='submit'
+          variant='contained'
+          > Update </Button>
+        }
+          </DialogActions>
+                </form>
+        </Dialog>
     </Page>
   )
 }

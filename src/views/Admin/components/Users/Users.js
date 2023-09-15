@@ -3,7 +3,9 @@ import Page from '../../../../components/page'
 import { Box, Button, styled,
   List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, 
   Typography, Divider, useTheme, Tooltip,
-  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton 
+  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton,
+  TextField,InputLabel,Select,Dialog,DialogActions,
+  DialogTitle,FormControl,MenuItem,DialogContent 
 
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -11,8 +13,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import { useDispatch } from 'react-redux';
-import { getRoles, getUsers } from '../../../../store/actions/adminActions';
+import { deleteUser, getRoles, getUser, getUsers, updateUser } from '../../../../store/actions/adminActions';
 import AddUser from './components/AddUser';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useSnackbar } from 'notistack';
+import { RotatingLines } from 'react-loader-spinner';
 const StyledRoot = styled(Box)(({theme})=> ({
     padding: theme.spacing(3)
   }))
@@ -23,11 +29,46 @@ const StyledRoot = styled(Box)(({theme})=> ({
       },
     },
   }));
+  
 const Users = () => {
+ 
+    const initialValues ={
+        name:'',
+        email:'',
+        role:''
+    }
+    const [formValues,setFormValues] = React.useState(initialValues)
+    const [loading, setLoading] = React.useState(false)
+    const handleChangeR = (event) => {
+      setFormValues({...formValues, role :event.target.value})
+    };
+    const handleChange = (e) => {
+        const {name, value} = e.target
+        setFormValues({...formValues, [name]:value})
+    }
+    const handleSubmit = (e) => {
+      setLoading(true)
+        e.preventDefault()
+        dispatch(updateUser(formValues, id)).then((result) => {
+          setLoading(false)
+          setFormValues(initialValues)  
+          enqueueSnackbar(result.data.message, {
+              variant:'success'
+            })
+            getAllUsers()
+           setEditDialog(false)
+        }).catch((err) => {
+          setLoading(false)
+            console.log(err)
+        });
+    }
     const theme = useTheme()
     const [data, setData] = React.useState([])
     const [open, setOpen] = React.useState(false)
     const [roles, setRoles] = React.useState([])
+    const [id, setId] = React.useState('')
+    const [editDialog, setEditDialog] = React.useState(false)
+    const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
     const getAllRoles = () => {
       dispatch(getRoles()).then((result) => {
@@ -36,6 +77,10 @@ const Users = () => {
         console.log(err)
       });
     }
+    const arr = Object.keys(roles).map((key) => ({
+      key,
+      value: roles[key],
+    }));
     const getAllUsers = () => {
         dispatch(getUsers()).then((result) => {
           setData(result.data.data)
@@ -51,6 +96,40 @@ const Users = () => {
         setOpen(false);
         getAllUsers()
       };
+      const handleDelete = (id) => {
+        confirmAlert({
+          title: 'Delete?',
+          message: 'Are you sure to want to delete ?',
+          buttons:[
+            {
+              label: 'Yes',
+              onClick: ()=>{
+                dispatch(deleteUser(id)).then((result) => {
+                  enqueueSnackbar(result.data.message, {
+                    variant:'success'
+                  })
+                  getAllUsers()
+                }).catch((err) => {
+                  console.log(err)
+                });
+              }
+            },
+           {
+            label: 'No',
+           }
+    
+          ]
+        })
+      }
+      const handleEdit =(id) => {
+        setId(id)
+        setEditDialog(true)
+        dispatch(getUser(id)).then((result) => {
+          setFormValues(...result.data.data)
+        }).catch((err) => {
+          console.log(err)
+        });
+      }
   return (
     <Page
     title="Categories"
@@ -81,16 +160,20 @@ const Users = () => {
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.email}</TableCell>
-                  <TableCell>{item.role}</TableCell>               
+                  <TableCell>{item.role_name}</TableCell>               
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
-                        <EditIcon sx={{ color: theme.palette.primary.main }} />
+                        <EditIcon sx={{ color: theme.palette.primary.main }} 
+                          onClick={()=>handleEdit(item.id)}
+                                      />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Name">
                       <IconButton edge="end" aria-label="Delete">
-                        <DeleteIcon sx={{ color: theme.palette.primary.main }} />
+                        <DeleteIcon sx={{ color: theme.palette.primary.main }}
+                          onClick={()=> handleDelete(item.id)}
+                        />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -115,6 +198,72 @@ const Users = () => {
           </>
         }
       </StyledRoot>
+
+      {/* ---------------UPDATE USER---------------------- */}
+      <Dialog open={editDialog} onClose={()=> setEditDialog(false)}>
+            <form onSubmit={handleSubmit}>
+          <DialogTitle>Add User</DialogTitle>
+          <Divider />
+          <DialogContent>
+            <TextField
+              label="Name"
+              variant="outlined"
+              fullWidth
+              name="name"
+              value={formValues.name}
+              onChange={handleChange}
+              required
+              />
+            <TextField 
+            required
+            type='email'
+            label="Email"
+            fullWidth
+            name='email'
+            value={formValues.email}
+            onChange={handleChange}
+            sx={{mt:2, mb:2}}
+            />
+            <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Role</InputLabel>
+        <Select
+          required
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={formValues.role}
+          label="Role"
+          name="role"
+          onChange={handleChangeR}
+        >
+          {
+            arr.map((val,ind)=>{
+              return(
+                <MenuItem value={val.key}>{val.value}</MenuItem>
+              )
+            })
+          }
+        </Select>
+      </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setEditDialog(false)} color="primary">
+              Cancel
+            </Button>
+            {
+          loading ? <Button type='submit' variant='disabled'>    <RotatingLines
+          strokeColor="#002448"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="30"
+          visible={loading}/> </Button> :
+          <Button
+          type='submit'
+          variant='contained'
+          > Update </Button>
+        }
+          </DialogActions>
+                </form>
+        </Dialog>
     </Page>
   )
 }

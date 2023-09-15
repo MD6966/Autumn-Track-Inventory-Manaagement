@@ -12,11 +12,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import AddFacility from './components/AddFacility';
 import { useDispatch } from 'react-redux';
-import { deleteFacility, getFacilities, getFacility } from '../../../../store/actions/adminActions';
+import { deleteFacility, getFacilities, getFacility, updateFacility } from '../../../../store/actions/adminActions';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useSnackbar } from 'notistack';
-import EditFacility from './components/EditFacility';
+import { RotatingLines } from 'react-loader-spinner';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -28,9 +28,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Facilities = () => {
+  const initialValues ={
+      name:'',
+      email:''
+  }
+  const [formValues,setFormValues] = React.useState(initialValues)
+  const handleChange = (e) => {
+      const {name, value} = e.target
+      setFormValues({...formValues, [name]:value})
+  }
   const classes = useStyles();
   const theme = useTheme()
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [id, setId]=React.useState('')
   const [loading, setLoading] = React.useState(false)
   const [fOpen, setFopen] = React.useState(false)
   const [fData, setFdata] = React.useState([])
@@ -40,12 +50,6 @@ const Facilities = () => {
   const handleOpenDialog = () => {
     setDialogOpen(true);
   };
- 
-  const items = [
-    { id: 1, name: 'Item 1', email: 'email1@example.com' },
-    { id: 2, name: 'Item 2', email: 'email2@example.com' },
-    { id: 3, name: 'Item 3', email: 'email3@example.com' },
-  ];
   const getAllFacilities = () => {
     dispatch(getFacilities()).then((result) => {
       setFdata(result.data.data)
@@ -61,8 +65,10 @@ const Facilities = () => {
     getAllFacilities()
   };
   const handleEdit =(id) => {
+    setId(id)
+    setFopen(true)
     dispatch(getFacility(id)).then((result) => {
-      setUdata(result.data.data)
+      setFormValues(...result.data.data)
     }).catch((err) => {
       console.log(err)
     });
@@ -93,6 +99,23 @@ const Facilities = () => {
       ]
     })
   }
+
+   const handleSubmit = (e) => {
+        setLoading(true)
+        e.preventDefault()
+        dispatch(updateFacility(formValues, id)).then((result) => {
+            setLoading(false)
+            setFormValues(initialValues)
+            enqueueSnackbar(result.data.message, {
+                variant:'success'
+            })
+            getAllFacilities()
+            setFopen(false)
+        }).catch((err) => {
+            setLoading(false)
+            console.log(err)
+        });
+    }
   return (
     <Page
     title="Facilities"
@@ -154,7 +177,53 @@ const Facilities = () => {
           </>
         }
         <AddFacility open={isDialogOpen} close={()=>setDialogOpen(false)} onCreateSuccess={handleCreateSuccess}  />
-        <EditFacility open={fOpen} close={()=>setFopen(false)} data={uData} />
+        
+        {/* -------------------EDIT FACILITY----------------- */}
+        
+        <Dialog open={fOpen} onClose={()=>setFopen(false)}>
+            <form onSubmit={handleSubmit}>
+          <DialogTitle>Edit Facility</DialogTitle>
+          <Divider />
+          <DialogContent>
+            <TextField
+              label="Facility Name"
+              variant="outlined"
+              fullWidth
+              name="name"
+              value={formValues.name}
+              onChange={handleChange}
+              required
+              />
+            <TextField 
+            required
+            type='email'
+            label="Email"
+            fullWidth
+            name='email'
+            value={formValues.email}
+            onChange={handleChange}
+            sx={{mt:2}}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setFopen(false)} color="primary">
+              Cancel
+            </Button>
+            {
+          loading ? <Button type='submit' variant='disabled'>    <RotatingLines
+          strokeColor="#002448"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="30"
+          visible={loading}/> </Button> :
+          <Button
+          type='submit'
+          variant='contained'
+          > Update </Button>
+        }
+          </DialogActions>
+                </form>
+        </Dialog>
         
       </StyledRoot>
     </Page>
