@@ -12,13 +12,14 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, getRoles, getUser, getUsers, updateUser } from '../../../../store/actions/adminActions';
 import AddUser from './components/AddUser';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useSnackbar } from 'notistack';
 import { RotatingLines } from 'react-loader-spinner';
+import ManageRolesPermissions from './components/ManageRoles&Permissions';
 const StyledRoot = styled(Box)(({theme})=> ({
     padding: theme.spacing(3)
   }))
@@ -66,10 +67,12 @@ const Users = () => {
     const [data, setData] = React.useState([])
     const [open, setOpen] = React.useState(false)
     const [roles, setRoles] = React.useState([])
+    const [rolesOpen, setRolesOpen]=React.useState(false)
     const [id, setId] = React.useState('')
     const [editDialog, setEditDialog] = React.useState(false)
     const {enqueueSnackbar} = useSnackbar()
     const dispatch = useDispatch()
+    const user_id = useSelector((state)=>state.admin.user.id)
     const getAllRoles = () => {
       dispatch(getRoles()).then((result) => {
         setRoles(result.data.data)
@@ -82,7 +85,7 @@ const Users = () => {
       value: roles[key],
     }));
     const getAllUsers = () => {
-        dispatch(getUsers()).then((result) => {
+        dispatch(getUsers(user_id)).then((result) => {
           setData(result.data.data)
         }).catch((err) => {
           console.log(err)
@@ -151,6 +154,7 @@ const Users = () => {
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Role</TableCell>
+                <TableCell>Roles & Permissions</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -160,7 +164,19 @@ const Users = () => {
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.email}</TableCell>
-                  <TableCell>{item.role_name}</TableCell>               
+                  <TableCell>{item.role_name}</TableCell>
+                  <TableCell>
+                    {
+                      item.role == "super_admin" ?
+                      "------------------------" :
+                      <Button variant='contained'
+                    onClick={()=>setRolesOpen(true)}
+                    >
+                      Manage
+                    </Button> 
+                    }
+                    
+                    </TableCell>               
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
@@ -198,6 +214,7 @@ const Users = () => {
           </>
         }
       </StyledRoot>
+      <ManageRolesPermissions open={rolesOpen} close={()=>setRolesOpen(false)} />
 
       {/* ---------------UPDATE USER---------------------- */}
       <Dialog open={editDialog} onClose={()=> setEditDialog(false)}>

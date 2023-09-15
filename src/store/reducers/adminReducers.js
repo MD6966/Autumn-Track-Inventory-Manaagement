@@ -1,6 +1,7 @@
 const initialState = {
     isAuthenticated: false,
     token : localStorage.getItem('token'),
+    permission:null
 }
 
 const adminReducer = (state=initialState, action) => {
@@ -11,7 +12,9 @@ const adminReducer = (state=initialState, action) => {
                 ...state,
                 ...action.payload.data,
                 token: action.payload.data.token,
-                isAuthenticated: true
+                isAuthenticated: true,
+                permission:action.payload.data
+
             };
         };
         case 'LOGOUT_SUUCCESS' : {

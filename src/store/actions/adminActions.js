@@ -283,9 +283,9 @@ export const  getRoles = () => async (dispatch) => {
 
 //-------------USERS-------------------
 
-export const  getUsers = () => async (dispatch) => {
+export const  getUsers = (user_id) => async (dispatch) => {
   try{
-    const res = await api.get('api/users')
+    const res = await api.get(`api/users?user_id=${user_id}`)
     dispatch({
       type:'GET_USERS',
       payload:res.data
@@ -361,6 +361,22 @@ export const  getDashboardCounts = () => async (dispatch) => {
     const res = await api.get('api/getDashboardCounts')
     dispatch({
       type:'GET_COUNTS',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+// ------------------USER PERMISSIONS------------------
+
+export const  getUserPermissions = (id) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/user_permissions/${id}`)
+    dispatch({
+      type:'GET_PERMISSIONS',
       payload:res.data
     })
       return res

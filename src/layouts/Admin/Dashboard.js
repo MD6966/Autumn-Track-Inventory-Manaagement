@@ -14,11 +14,12 @@ import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CategoryIcon from '@mui/icons-material/Category';
 import PeopleIcon from '@mui/icons-material/People';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import { adminLogOut } from '../../store/actions/adminActions';
 const useStyles = makeStyles((theme)=> ({
     selected : {
@@ -33,14 +34,8 @@ const useStyles = makeStyles((theme)=> ({
     }
   }))
   const drawerWidth = 240;
-const ListData = [
-    {id:1, title:'Dashboard', icon:<DashboardIcon />, to:'/admin/dashboard'  },
-    {id:2, title:'Facilities', icon:<LocationOnIcon />, to:'/admin/facilities'},
-    {id:3, title:'Categories', icon:<CategoryIcon />, to:'/admin/categories'},
-    {id:4, title:'Vendors', icon:<AdminPanelSettingsIcon />, to:'/admin/vendors'},
-    {id:5, title:'Users', icon:<PeopleIcon />, to:'/admin/users'},
+  
 
-  ]
   const StyledRoot = styled(AppBar)(({theme})=> ({
     position:'fixed',
     background: theme.palette.primary.main,
@@ -52,8 +47,29 @@ const ListData = [
     display:'flex',
     justifyContent:'space-between'
    }))
-const Dashboard = () => {
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
+   const Dashboard = () => {
+     const permission = useSelector((state)=>state.admin.user.permissions)
+     console.log(permission)
+     const ListData = [
+      {id:1, title:'Dashboard', icon:<DashboardIcon />, to:'/admin/dashboard'  },
+      {id:2, title:'Facilities', icon:<LocationOnIcon />, to:'/admin/facilities',
+      permission:permission.facilities
+    },
+      {id:3, title:'Invoices', icon:<ReceiptIcon />, to:'/admin/invoices',
+      permission:permission.invoices
+    },
+      {id:4, title:'Categories', icon:<CategoryIcon />, to:'/admin/categories',
+      permission:permission.categories
+    },
+      {id:5, title:'Vendors', icon:<AdminPanelSettingsIcon />, to:'/admin/vendors',
+      permission:permission.vendors
+    },
+      {id:6, title:'Users', icon:<PeopleIcon />, to:'/admin/users',
+      permission:permission.users
+    },
+      
+    ]
+     const [selectedIndex, setSelectedIndex] = React.useState(1);
     const [dOpen, setDopen] = React.useState(false)
     const location = useLocation();
     React.useEffect(() => {
@@ -150,6 +166,9 @@ const Dashboard = () => {
                 {ListData.map((val)=> {
                   return(
                     <>
+                    {
+                       val.permission == 'no_permission' ?
+                       null :
                     <ListItem key={val} disablePadding
                     className={clsx(classes.root, {
                       [classes.selected]: selectedIndex === val.id,
@@ -168,6 +187,7 @@ const Dashboard = () => {
                       <ListItemText primary={val.title} sx={{ color: selectedIndex === val.id ? 'black' : '#fff' }} />
                       </ListItemButton>
                     </ListItem>
+                    }
                     </>
                   )
                 })}
