@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddVendor from './components/AddVendor';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteVendor, getCategories, getVendor, getVendors, updateVendor } from '../../../../store/actions/adminActions';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -122,16 +122,21 @@ const handleSubmit = (e) => {
       ]
     })
   }
+  const permission = useSelector((state)=>state.admin.user.permissions)
+
   return (
     <Page
     title="Vendors"
     >
       <StyledRoot>
+        {
+          permission.vendors == "view_edit" &&
       <Button variant='contained' endIcon={<AddCircleIcon />} sx={{mb:2}}
       onClick={()=>setOpen(true)}
       >
             Add Vendor
           </Button>
+        }
         <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="Vendors Table">
         <TableHead>
@@ -140,7 +145,10 @@ const handleSubmit = (e) => {
             <TableCell>Name</TableCell>
             <TableCell>Category</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell>Actions</TableCell>
+            {
+          permission.vendors == "view_edit" &&
+          <TableCell>Actions</TableCell>
+            }
           </TableRow>
         </TableHead>
         <TableBody>
@@ -151,6 +159,8 @@ const handleSubmit = (e) => {
               <TableCell>{vendor.name}</TableCell>
               <TableCell>{vendor.category == null ? 'Null' : vendor.category.name}</TableCell>
               <TableCell>{vendor.email}</TableCell>
+              {
+          permission.vendors == "view_edit" &&
               <TableCell>
               <Tooltip
             title="Edit"
@@ -173,6 +183,7 @@ const handleSubmit = (e) => {
             </IconButton>
               </Tooltip>
               </TableCell>
+              }
             </TableRow>
             )
           })}

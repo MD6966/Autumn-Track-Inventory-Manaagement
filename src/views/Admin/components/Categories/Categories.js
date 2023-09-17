@@ -9,7 +9,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteCategory, getCategories, getCategory, updateCategory } from '../../../../store/actions/adminActions';
 import AddCategory from './components/AddCategory';
 import { confirmAlert } from 'react-confirm-alert';
@@ -108,14 +108,19 @@ const Categories = () => {
           console.log(err)
       });
   }
+  const permission = useSelector((state)=>state.admin.user.permissions)
+
   return (
     <Page
     title="Categories"
     >
       <StyledRoot>
+        {
+           permission.categories == "view_edit" &&
           <Button variant='contained' endIcon={<AddCircleIcon />} onClick={()=>setOpen(true)}>
             Add Category
           </Button>
+        }
           <Box sx={{mt:2}}>
             <Typography variant='h4' fontWeight="bold" textAlign="center">
               All Categories
@@ -127,8 +132,10 @@ const Categories = () => {
               <TableRow>
                 <TableCell>Id</TableCell>
                 <TableCell>Category Name</TableCell>
-
+                  {
+                  permission.categories == "view_edit" &&
                 <TableCell>Actions</TableCell>
+                  }
               </TableRow>
             </TableHead>
             <TableBody>
@@ -136,7 +143,8 @@ const Categories = () => {
                 <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
-               
+                  {
+           permission.categories == "view_edit" &&
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
@@ -154,6 +162,7 @@ const Categories = () => {
                       </IconButton>
                     </Tooltip>
                   </TableCell>
+                  }
                 </TableRow>
               ))}
             </TableBody>

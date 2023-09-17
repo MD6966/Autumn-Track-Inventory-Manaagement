@@ -133,14 +133,19 @@ const Users = () => {
           console.log(err)
         });
       }
+      const permission = useSelector((state)=>state.admin.user.permissions)
+      const role = useSelector((state)=>state.admin.user.role)
   return (
     <Page
     title="Categories"
     >
       <StyledRoot>
+        {
+           permission.users == "view_edit" &&
           <Button variant='contained' endIcon={<AddCircleIcon />} onClick={()=>setOpen(true)}>
             Add User
           </Button>
+        }
           <Box sx={{mt:2}}>
             <Typography variant='h4' fontWeight="bold" textAlign="center">
               All Users
@@ -154,8 +159,15 @@ const Users = () => {
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Role</TableCell>
+               {
+                
+                role == ("super_admin" || "regional_admin" )&&
                 <TableCell>Roles & Permissions</TableCell>
-                <TableCell>Actions</TableCell>
+               }
+                {
+           permission.users == "view_edit" &&
+           <TableCell>Actions</TableCell>
+                }
               </TableRow>
             </TableHead>
             <TableBody>
@@ -165,6 +177,8 @@ const Users = () => {
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.email}</TableCell>
                   <TableCell>{item.role_name}</TableCell>
+                  {
+                role ==( "super_admin" || "regional_admin") &&
                   <TableCell>
                     {
                       item.role == "super_admin" ?
@@ -176,7 +190,10 @@ const Users = () => {
                     </Button> 
                     }
                     
-                    </TableCell>               
+                    </TableCell> 
+                  }
+                    {
+           permission.users == "view_edit" &&
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
@@ -193,6 +210,7 @@ const Users = () => {
                       </IconButton>
                     </Tooltip>
                   </TableCell>
+                    }              
                 </TableRow>
               ))}
             </TableBody>

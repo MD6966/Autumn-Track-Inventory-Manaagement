@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { makeStyles } from '@mui/styles';
 import AddFacility from './components/AddFacility';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteFacility, getFacilities, getFacility, updateFacility } from '../../../../store/actions/adminActions';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -115,15 +115,21 @@ const Facilities = () => {
             setLoading(false)
             console.log(err)
         });
-    }
+    }  
+    const permission = useSelector((state)=>state.admin.user.permissions)
+    console.log(permission)
   return (
     <Page
     title="Facilities"
     >
       <StyledRoot>
+        {
+          permission.facilities == "view_edit" &&
           <Button variant='contained' endIcon={<AddCircleIcon />} onClick={handleOpenDialog}>
             Add Facility
           </Button>
+
+        }
           <Box sx={{mt:2}}>
             <Typography variant='h4' fontWeight="bold" textAlign="center">
               All Facilities Names
@@ -136,7 +142,10 @@ const Facilities = () => {
                 <TableCell>Id</TableCell>
                 <TableCell>Facility Name</TableCell>
                 <TableCell>Facility Email</TableCell>
-                <TableCell>Actions</TableCell>
+                {
+                   permission.facilities == "view_edit" &&
+                <TableCell>Actions</TableCell> 
+                }
               </TableRow>
             </TableHead>
            
@@ -146,6 +155,8 @@ const Facilities = () => {
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.email}</TableCell>
+                  {
+                     permission.facilities == "view_edit" &&
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
@@ -163,12 +174,13 @@ const Facilities = () => {
                       </IconButton>
                     </Tooltip>
                   </TableCell>
+              }
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </TableContainer>
-        {
+          </TableContainer>
+          {
           fData.length < 1 && <>
           <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
         <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
