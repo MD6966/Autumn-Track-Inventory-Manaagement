@@ -49,7 +49,8 @@ const useStyles = makeStyles((theme)=> ({
    }))
    const Dashboard = () => {
      const permission = useSelector((state)=>state.admin.user.permissions)
-     console.log(permission)
+     const user = useSelector((state)=>state.admin.user)
+    //  console.log(userId)
      const ListData = [
       {id:1, title:'Dashboard', icon:<DashboardIcon />, to:'/admin/dashboard'  },
       {id:2, title:'Facilities', icon:<LocationOnIcon />, to:'/admin/facilities',
@@ -94,7 +95,7 @@ const useStyles = makeStyles((theme)=> ({
             {
               label: 'Yes',
               onClick: ()=>{
-                dispatch(adminLogOut())
+                dispatch(adminLogOut(user.id))
                 navigate('/',{ replace: true})
               }
             },
@@ -158,7 +159,7 @@ const useStyles = makeStyles((theme)=> ({
             <Box sx={{display:'flex', justifyContent:'center',}}>
               <Avatar src='/assets/images/admin.webp' sx={{height:'120px', width:'120px', mt:'2rem'}} />
             </Box>
-            <Typography sx={{color:'#fff', textAlign:'center'}} variant='h6' gutterBottom> Super Admin </Typography>
+            <Typography sx={{color:'#fff', textAlign:'center'}} variant='h6' gutterBottom> {user.role_name} </Typography>
             <Divider /> 
             <Box sx={{p:1}}>
               <Typography sx={{color:'#fff', fontSize:'15px', mt:1 }}> Admin Dashboard</Typography>

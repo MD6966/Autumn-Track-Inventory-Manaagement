@@ -36,6 +36,7 @@ const DashboardAdmin = () => {
   const id = useSelector((state)=>state.admin.user.id)
   const getCounts = () => {
     dispatch(getDashboardCounts()).then((result) => {
+      // console.log(result)
       setCounts(result.data.data)
     }).catch((err) => {
       console.log(err)

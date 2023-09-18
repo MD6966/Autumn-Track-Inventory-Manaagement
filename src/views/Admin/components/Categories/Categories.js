@@ -3,7 +3,7 @@ import Page from '../../../../components/page'
 import { Box, Button, styled, IconButton, 
   Typography, Divider, useTheme, Tooltip,
   Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton, 
-  Dialog,DialogTitle,DialogContent,TextField,DialogActions
+  Dialog,DialogTitle,DialogContent,TextField,DialogActions, Avatar
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -148,17 +148,21 @@ const Categories = () => {
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
+                        <Avatar sx={{background:'none', border:'1px solid #002448',}}>
                         <EditIcon sx={{ color: theme.palette.primary.main }} 
                          onClick={()=>handleEdit(item.id)}
-                                                  />
+                         />
+                         </Avatar>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Name">
                       <IconButton edge="end" aria-label="Delete">
-                        <DeleteIcon sx={{ color: theme.palette.primary.main }} 
+                        <Avatar sx={{background:'none', border:'1px solid red', '&:hover':{background:'#f7d2d2'}}}>
+
+                        <DeleteIcon sx={{ color:'#F70000'}} 
                         onClick={()=> handleDelete(item.id)}
-                        
                         />
+                        </Avatar>
                       </IconButton>
                     </Tooltip>
                   </TableCell>

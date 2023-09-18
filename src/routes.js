@@ -20,10 +20,10 @@ import ManageInvoices from "./views/Admin/components/Invoices/ManageInvoices";
 
 export default function Router() {
     let element = useRoutes([
-        {
-        path:'/',
-        element : <Landing /> ,
-       },
+    //     {
+    //     path:'/',
+    //     element : <Landing /> ,
+    //    },
        {
         path:'auth',
         element: <AuthLayout />, 
@@ -37,7 +37,7 @@ export default function Router() {
         element: <Home />,
        },
        {
-        path:'/admin-login',
+        path:'/',
         element: <AdminLogin /> 
        },
        {

@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, IconButton, Tooltip, 
   styled, Box, Button, useTheme, Skeleton,
   Dialog,DialogTitle,Divider,DialogContent,MenuItem,TextField,
-  DialogActions,FormControl,Select,InputLabel
+  DialogActions,FormControl,Select,InputLabel, Avatar
 } from '@mui/material';
 import Page from '../../../../components/page';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -166,20 +166,22 @@ const handleSubmit = (e) => {
             title="Edit"
             >
             <IconButton edge="end" aria-label="Edit">
+              <Avatar sx={{background:'none', border:'1px solid #002448'}}>
               <EditIcon 
               sx={{color:theme.palette.primary.main}}
               onClick={()=>handleEdit(vendor.id)}
-              
               />
+              </Avatar>
             </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
             <IconButton edge="end" aria-label="Delete">
+              <Avatar sx={{background:'none', border:'1px solid red', '&:hover':{background:'#f7d2d2'}}}>
               <DeleteIcon 
-              sx={{color:theme.palette.primary.main}}
+              sx={{color:'#F70000'}}
               onClick={()=> handleDelete(vendor.id)}
-
               />
+              </Avatar>
             </IconButton>
               </Tooltip>
               </TableCell>

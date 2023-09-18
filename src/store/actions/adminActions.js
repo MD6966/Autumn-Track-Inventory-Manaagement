@@ -47,10 +47,16 @@ export const adminLogin = ({ email, password }) => async (dispatch) => {
 };
 
 
-export const adminLogOut = () => (dispatch) => {
+export const adminLogOut = (id) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/logout/${id}`)
     dispatch({
         type: 'LOGOUT_SUUCCESS'
       });
+  }
+  catch(err) {
+    throw err
+  }
     }
 
 // ---------------ROLES-------------------------
@@ -363,6 +369,7 @@ export const  getDashboardCounts = () => async (dispatch) => {
       type:'GET_COUNTS',
       payload:res.data
     })
+    console.log(res, '+++++++')
       return res
   }
   catch(err) {

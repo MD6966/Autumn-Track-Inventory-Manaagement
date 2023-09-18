@@ -4,7 +4,7 @@ import { Box, Button, styled,
   List, ListItem, ListItemText, ListItemSecondaryAction, 
   IconButton, Typography, Divider, useTheme, Tooltip,
   Dialog, DialogTitle,DialogActions,TextField, DialogContent,
-  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton 
+  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton, Avatar 
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -160,17 +160,20 @@ const Facilities = () => {
                   <TableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
+                        <Avatar sx={{background:'none', border:'1px solid #002448',}}>
                         <EditIcon sx={{ color: theme.palette.primary.main }} 
                           onClick={()=>handleEdit(item.id)}
-
-                        />
+                          />
+                          </Avatar>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Name">
                       <IconButton edge="end" aria-label="Delete">
-                        <DeleteIcon sx={{ color: theme.palette.primary.main }} 
+                        <Avatar sx={{background:'none', border:'1px solid red', '&:hover':{background:'#f7d2d2'}}}>
+                        <DeleteIcon sx={{ color:'#F70000'}} 
                         onClick={()=> handleDelete(item.id)}
                         />
+                        </Avatar>
                       </IconButton>
                     </Tooltip>
                   </TableCell>
