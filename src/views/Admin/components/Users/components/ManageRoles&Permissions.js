@@ -13,6 +13,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, styled, useTheme } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -23,42 +24,47 @@ const StyledRoot = styled(Box)(({theme})=>({
     justifyContent:'center',
     alignItems:'center'
 }))
-const initialValues = {
-    user_id:'',
-    facilities:'',
-    categories:'',
-    vendors:'',
-    users:''
-}
-const tableData = [
-    {name:'Facilities', description:[
-        {name:'No Permission', value:'no_permission'},
-        {name:'View', value:'view'},
-        {name:'View / Edit', value:'view_edit'},
-    ]},
-    {name:'Invoices', description:[
-        {name:'No Permission', value:'no_permission'},
-        {name:'View', value:'view'},
-        {name:'View / Edit', value:'view_edit'},
-    ]},
-    {name:'Categories', description:[
-        {name:'No Permission', value:'no_permission'},
-        {name:'View', value:'view'},
-        {name:'View / Edit', value:'view_edit'},
-    ]},
-    {name:'Vendors', description:[
-        {name:'No Permission', value:'no_permission'},
-        {name:'View', value:'view'},
-        {name:'View / Edit', value:'view_edit'},
-    ]},
-    {name:'Users', description:[
-        {name:'No Permission', value:'no_permission'},
-        {name:'View', value:'view'},
-        {name:'View / Edit', value:'view_edit'},
-    ]},
-]
+
+// const tableData = [
+//     {name:'Facilities', description:[
+//         {name:'No Permission', value:'no_permission'},
+//         {name:'View', value:'view'},
+//         {name:'View / Edit', value:'view_edit'},
+//     ]},
+//     {name:'Invoices', description:[
+//         {name:'No Permission', value:'no_permission'},
+//         {name:'View', value:'view'},
+//         {name:'View / Edit', value:'view_edit'},
+//     ]},
+//     {name:'Categories', description:[
+//         {name:'No Permission', value:'no_permission'},
+//         {name:'View', value:'view'},
+//         {name:'View / Edit', value:'view_edit'},
+//     ]},
+//     {name:'Vendors', description:[
+//         {name:'No Permission', value:'no_permission'},
+//         {name:'View', value:'view'},
+//         {name:'View / Edit', value:'view_edit'},
+//     ]},
+//     {name:'Users', description:[
+//         {name:'No Permission', value:'no_permission'},
+//         {name:'View', value:'view'},
+//         {name:'View / Edit', value:'view_edit'},
+//     ]},
+// ]
 const ManageRolesPermissions = (props) => {
+  const permissions = useSelector((state)=>state.admin.user.permissions)
+  const user = useSelector((state)=>state.admin.user)
+  // console.log(user, "User")
+  const initialValues = {
+    user_id:user.id,
+    facilities:permissions.facilities,
+    categories:permissions.categories,
+    vendors:permissions.vendors,
+    users:permissions.users
+}
     const [selectedValues, setSelectedValues] = React.useState(initialValues)
+
     const handleRadioChange = (category, value) => {
         setSelectedValues((prevState) => ({
           ...prevState,
@@ -68,6 +74,9 @@ const ManageRolesPermissions = (props) => {
       const displaySelectedValues = () => {
         console.log(selectedValues);
       };
+      const handleFacilityChange = (e) => {
+        setSelectedValues({...selectedValues, facilities:e.target.value})
+      }
     const theme=useTheme()
   return (
     <div>
@@ -104,7 +113,29 @@ const ManageRolesPermissions = (props) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {tableData.map((val, ind)=> {
+                  <TableRow>
+                    <TableCell>
+                      Facilities
+                    </TableCell>
+                    <TableCell>
+                    <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">Permissions</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                      defaultValue={selectedValues.facilities}
+                      value={selectedValues.facilities}
+                      onChange={handleFacilityChange}
+                    >
+                      <FormControlLabel value="no_permission" control={<Radio />} label="No Permission" />
+                      <FormControlLabel value="view" control={<Radio />} label="View Only" />
+                      <FormControlLabel value="view_edit" control={<Radio />} label="View & Edit" />
+      </RadioGroup>
+    </FormControl>
+                    </TableCell>
+                  </TableRow>
+                    {/* {tableData.map((val, ind)=> {
                         return(
                             <TableRow>
                         <TableCell>
@@ -134,10 +165,11 @@ const ManageRolesPermissions = (props) => {
                         </TableCell>
                     </TableRow>
                         )
-                    })}
+                    })} */}
                     
                 </TableBody>
             </Table>
+
             <Button
           variant="contained"
           color="primary"
