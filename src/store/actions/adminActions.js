@@ -392,3 +392,16 @@ export const  getUserPermissions = (id) => async (dispatch) => {
     throw err
   }
 }
+export const  UpdatePermissions = (body) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/user_permissions`, body)
+    dispatch({
+      type:'UPDATE_PERMISSIONS',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}

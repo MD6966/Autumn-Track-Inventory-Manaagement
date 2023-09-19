@@ -42,6 +42,7 @@ const Facilities = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [id, setId]=React.useState('')
   const [loading, setLoading] = React.useState(false)
+  const [fl, setFl] = React.useState(false)
   const [fOpen, setFopen] = React.useState(false)
   const [fData, setFdata] = React.useState([])
   const [uData, setUdata] = React.useState([])
@@ -51,8 +52,10 @@ const Facilities = () => {
     setDialogOpen(true);
   };
   const getAllFacilities = () => {
+    setFl(true)
     dispatch(getFacilities()).then((result) => {
       setFdata(result.data.data)
+      setFl(false)
     }).catch((err) => {
       console.log(err)
     });
@@ -184,12 +187,17 @@ const Facilities = () => {
           </Table>
           </TableContainer>
           {
-          fData.length < 1 && <>
+          fl && <>
           <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
         <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
         <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
 
           </>
+        }
+        { (fData.length < 1 && !fl) &&
+          <Typography variant='h5' sx={{textAlign:'center', mt:5}}>
+          No Data Found...
+        </Typography>
         }
         <AddFacility open={isDialogOpen} close={()=>setDialogOpen(false)} onCreateSuccess={handleCreateSuccess}  />
         

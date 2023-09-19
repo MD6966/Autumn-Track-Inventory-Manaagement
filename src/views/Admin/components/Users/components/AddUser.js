@@ -29,6 +29,7 @@ const AddUser = (props) => {
         setFormValues({...formValues, [name]:value})
     }
     const handleSubmit = (e) => {
+      console.log(formValues)
       setLoading(true)
         e.preventDefault()
         dispatch(addUser(formValues)).then((result) => {
@@ -91,8 +92,9 @@ const AddUser = (props) => {
         >
           {
             arr.map((val,ind)=>{
+              // console.log(val)
               return(
-                <MenuItem value={val.key}>{val.value}</MenuItem>
+                <MenuItem value={val.value}>{val.value}</MenuItem>
               )
             })
           }

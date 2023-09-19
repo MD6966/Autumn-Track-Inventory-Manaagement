@@ -13,7 +13,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, styled, useTheme } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {getUserPermissions} from '../../../../../store/actions/adminActions'
+import { useLocation, useParams } from 'react-router';
+import RolesPermissions from './RolesPermissions';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -52,35 +55,20 @@ const StyledRoot = styled(Box)(({theme})=>({
 //         {name:'View / Edit', value:'view_edit'},
 //     ]},
 // ]
-const ManageRolesPermissions = (props) => {
-  const permissions = useSelector((state)=>state.admin.user.permissions)
-  const user = useSelector((state)=>state.admin.user)
-  // console.log(user, "User")
-  const initialValues = {
-    user_id:user.id,
-    facilities:permissions.facilities,
-    categories:permissions.categories,
-    vendors:permissions.vendors,
-    users:permissions.users
-}
-    const [selectedValues, setSelectedValues] = React.useState(initialValues)
-
-    const handleRadioChange = (category, value) => {
-        setSelectedValues((prevState) => ({
-          ...prevState,
-          [category]: value,
-        }));
-      };
-      const displaySelectedValues = () => {
-        console.log(selectedValues);
-      };
-      const handleFacilityChange = (e) => {
-        setSelectedValues({...selectedValues, facilities:e.target.value})
-      }
-    const theme=useTheme()
+const ManageRolesPermissions = () => {
+  const {state} = useLocation()
   return (
     <div>
-      <Dialog
+      <AppBar position='static'>
+        <Toolbar>
+          Manage Roles And Permissions
+        </Toolbar>
+      </AppBar>
+      <StyledRoot>
+           <RolesPermissions permissions = {state.permissions} />
+        </StyledRoot>
+
+      {/* <Dialog
         fullScreen
         open={props.open}
         onClose={props.close}
@@ -127,45 +115,82 @@ const ManageRolesPermissions = (props) => {
                       defaultValue={selectedValues.facilities}
                       value={selectedValues.facilities}
                       onChange={handleFacilityChange}
+                      >
+                      <FormControlLabel value="no_permission" control={<Radio />} label="No Permission" />
+                      <FormControlLabel value="view" control={<Radio />} label="View Only" />
+                      <FormControlLabel value="view_edit" control={<Radio />} label="View & Edit" />
+                      </RadioGroup>
+                      </FormControl>
+                    </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          Categories
+                        </TableCell>
+                        <TableCell>
+                    <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">Permissions</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                      defaultValue={selectedValues.categories}
+                      value={selectedValues.categories}
+                      onChange={handleCategoryChange}
                     >
                       <FormControlLabel value="no_permission" control={<Radio />} label="No Permission" />
                       <FormControlLabel value="view" control={<Radio />} label="View Only" />
                       <FormControlLabel value="view_edit" control={<Radio />} label="View & Edit" />
-      </RadioGroup>
-    </FormControl>
+                      </RadioGroup>
+                      </FormControl>
                     </TableCell>
-                  </TableRow>
-                    {/* {tableData.map((val, ind)=> {
-                        return(
-                            <TableRow>
-                        <TableCell>
-                            {val.name}
-                        </TableCell>
-                        <TableCell>
-                        <FormControl>
-                            <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue={val.description[0].value}
-                                value={selectedValues[val.name]}
-                                name={`radio-buttons-group-${val.name}`}
-                                onChange={(e) =>
-                                  handleRadioChange(val.name, e.target.value)
-                                }
-                            >
-                                {val.description.map((val, ind)=> {
-                                    return(
-
-                                        <FormControlLabel value={val.value} control={<Radio />} label={val.name} />
-                                    )
-                                })}
-                            </RadioGroup>
-                            </FormControl>
-                        </TableCell>
+                      </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        Vendors
+                      </TableCell>
+                      <TableCell>
+                    <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">Permissions</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                      defaultValue={selectedValues.vendors}
+                      value={selectedValues.vendors}
+                      onChange={handleVendorChange}
+                    >
+                      <FormControlLabel value="no_permission" control={<Radio />} label="No Permission" />
+                      <FormControlLabel value="view" control={<Radio />} label="View Only" />
+                      <FormControlLabel value="view_edit" control={<Radio />} label="View & Edit" />
+                      </RadioGroup>
+                      </FormControl>
+                    </TableCell>
                     </TableRow>
-                        )
-                    })} */}
+                   <TableRow>
+                   <TableCell>
+                    Users
+                   </TableCell>
+                   <TableCell>
+                    <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">Permissions</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                      defaultValue={selectedValues.users}
+                      value={selectedValues.users}
+                      onChange={handleUserChange}
+                    >
+                      <FormControlLabel value="no_permission" control={<Radio />} label="No Permission" />
+                      <FormControlLabel value="view" control={<Radio />} label="View Only" />
+                      <FormControlLabel value="view_edit" control={<Radio />} label="View & Edit" />
+                      </RadioGroup>
+                      </FormControl>
+                    </TableCell>
+                   </TableRow>
+                    
+                    
                     
                 </TableBody>
             </Table>
@@ -178,7 +203,7 @@ const ManageRolesPermissions = (props) => {
           Display Selected Values
         </Button>
         </StyledRoot>
-      </Dialog>
+      </Dialog> */}
 
     </div>
   )

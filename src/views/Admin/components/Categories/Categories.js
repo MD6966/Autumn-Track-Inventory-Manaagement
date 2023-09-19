@@ -40,13 +40,16 @@ const Categories = () => {
   const theme = useTheme()
   const [data, setData] = React.useState([])
   const [open, setOpen] = React.useState(false)
+  const [cl, setCl] = React.useState(false)
   const[editDialog, setEditDialog] = React.useState(false)
   const[id, setId] = React.useState('')
   const {enqueueSnackbar} = useSnackbar()
   const dispatch = useDispatch()
   const getAllCategories = () => {
+    setCl(true)
     dispatch(getCategories()).then((result) => {
       setData(result.data.data)
+      setCl(false)
     }).catch((err) => {
       console.log(err)
     });
@@ -173,13 +176,18 @@ const Categories = () => {
           </Table>
         </TableContainer>
         <AddCategory open={open} close={()=>setOpen(false)} onCreateSuccess={handleCreateSuccess}/>
-        {
-          data.length < 1 && <>
+        { cl &&
+           <>
           <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
         <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
         <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
 
           </>
+        }
+        { (data.length < 1 && !cl) &&
+           <Typography variant='h5' sx={{textAlign:'center', mt:5}}>
+           No Data Found...
+         </Typography>
         }
       </StyledRoot>
 

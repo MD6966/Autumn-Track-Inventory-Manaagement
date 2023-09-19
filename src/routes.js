@@ -17,6 +17,7 @@ import UserFacilities from "./views/User/components/UserFacilities";
 import Invoices from "./views/User/components/Invoices";
 import Users from "./views/Admin/components/Users";
 import ManageInvoices from "./views/Admin/components/Invoices/ManageInvoices";
+import ManageRolesPermissions from "./views/Admin/components/Users/components/ManageRoles&Permissions";
 
 export default function Router() {
     let element = useRoutes([
@@ -59,6 +60,9 @@ export default function Router() {
             {path:'facilities', element:<UserFacilities />},
         ]
     
+        },
+        {
+            path:'/manage-roles', element: <ManageRolesPermissions />
         },
        {
         path:'*',

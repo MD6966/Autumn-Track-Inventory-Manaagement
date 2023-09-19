@@ -20,6 +20,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useSnackbar } from 'notistack';
 import { RotatingLines } from 'react-loader-spinner';
 import ManageRolesPermissions from './components/ManageRoles&Permissions';
+import { useNavigate } from 'react-router';
 const StyledRoot = styled(Box)(({theme})=> ({
     padding: theme.spacing(3)
   }))
@@ -40,6 +41,7 @@ const Users = () => {
     }
     const [formValues,setFormValues] = React.useState(initialValues)
     const [loading, setLoading] = React.useState(false)
+    const [selectedUser, setSelectedUser] = React.useState('')
     const handleChangeR = (event) => {
       setFormValues({...formValues, role :event.target.value})
     };
@@ -133,6 +135,11 @@ const Users = () => {
           console.log(err)
         });
       }
+      const navigate = useNavigate()
+      const handleManage = (data) => {
+        // console.log(data.permissions)
+        navigate(`/manage-roles`, {state:data})
+      }
       const permission = useSelector((state)=>state.admin.user.permissions)
       const role = useSelector((state)=>state.admin.user.role)
   return (
@@ -184,7 +191,7 @@ const Users = () => {
                       item.role == "super_admin" ?
                       "------------------------" :
                       <Button variant='contained'
-                    onClick={()=>setRolesOpen(true)}
+                    onClick={()=>handleManage(item)}
                     >
                       Manage
                     </Button> 
@@ -236,7 +243,9 @@ const Users = () => {
           </>
         }
       </StyledRoot>
-      <ManageRolesPermissions open={rolesOpen} close={()=>setRolesOpen(false)} />
+      {/* <ManageRolesPermissions open={rolesOpen} close={()=>setRolesOpen(false)}
+      userId = {selectedUser}
+      /> */}
 
       {/* ---------------UPDATE USER---------------------- */}
       <Dialog open={editDialog} onClose={()=> setEditDialog(false)}>
