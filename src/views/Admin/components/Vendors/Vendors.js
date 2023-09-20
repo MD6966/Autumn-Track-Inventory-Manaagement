@@ -38,7 +38,8 @@ const Vendors = () => {
   const initialValues ={
     name:'',
     email:'',
-    category_id:''
+    category_id:'',
+    password:''
 }
 const [loading, setLoading] = React.useState(false)
 const handleChangeC = (event) => {
@@ -230,6 +231,16 @@ const handleSubmit = (e) => {
             fullWidth
             name='email'
             value={formValues.email}
+            onChange={handleChange}
+            sx={{mt:2,}}
+            />
+             <TextField
+            type='password'
+            label="Password"
+            placeholder='This is Optional'
+            fullWidth
+            name='password'
+            value={formValues.password}
             onChange={handleChange}
             sx={{mt:2, mb:2}}
             />

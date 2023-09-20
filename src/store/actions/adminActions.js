@@ -274,6 +274,7 @@ export const  getRoles = () => async (dispatch) => {
     }
 
     export const  updateVendor = (body,id) => async (dispatch) => {
+      console.log(body)
       try{
         const res = await api.put(`api/vendors/${id}`, body)
         dispatch({

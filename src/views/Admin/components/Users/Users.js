@@ -37,7 +37,8 @@ const Users = () => {
     const initialValues ={
         name:'',
         email:'',
-        role:''
+        role:'',
+        password:''
     }
     const [formValues,setFormValues] = React.useState(initialValues)
     const [loading, setLoading] = React.useState(false)
@@ -269,6 +270,15 @@ const Users = () => {
             fullWidth
             name='email'
             value={formValues.email}
+            onChange={handleChange}
+            sx={{mt:2,}}
+            />
+            <TextField 
+            type='password'
+            label="Passsword"
+            fullWidth
+            name='password'
+            value={formValues.password}
             onChange={handleChange}
             sx={{mt:2, mb:2}}
             />

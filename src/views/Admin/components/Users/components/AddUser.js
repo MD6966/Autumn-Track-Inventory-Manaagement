@@ -94,7 +94,7 @@ const AddUser = (props) => {
             arr.map((val,ind)=>{
               // console.log(val)
               return(
-                <MenuItem value={val.value}>{val.value}</MenuItem>
+                <MenuItem value={val.key}>{val.value}</MenuItem>
               )
             })
           }

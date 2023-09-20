@@ -14,7 +14,8 @@ const AddVendor = (props) => {
     const initialValues ={
         name:'',
         email:'',
-        category_id:''
+        category_id:'',
+        password:'',
     }
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)
@@ -66,6 +67,16 @@ const AddVendor = (props) => {
             fullWidth
             name='email'
             value={formValues.email}
+            onChange={handleChange}
+            sx={{mt:2,}}
+            />
+              <TextField 
+            required
+            type='passsword'
+            label="Password"
+            fullWidth
+            name='password'
+            value={formValues.password}
             onChange={handleChange}
             sx={{mt:2, mb:2}}
             />
