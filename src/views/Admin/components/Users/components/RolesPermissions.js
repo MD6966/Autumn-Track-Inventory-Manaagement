@@ -53,7 +53,7 @@ const RolesPermissions = (props) => {
         {
             permissions ? 
             <>
-            <Table sx={{mb:2}}>
+            <Table sx={{mb:2, width:'180%'}}>
                      <TableHead >
                          <TableRow sx={{background:theme.palette.primary.main}}>
                              <TableCell sx={{color:'#fff'}}>Values</TableCell>

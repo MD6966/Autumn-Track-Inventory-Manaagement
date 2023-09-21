@@ -140,14 +140,14 @@ const Facilities = () => {
           </Box>
           <TableContainer>
           <Table>
-            <TableHead>
+            <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell>Facility Name</TableCell>
-                <TableCell>Facility Email</TableCell>
+                <TableCell sx={{color:'#fff'}}>Id</TableCell>
+                <TableCell sx={{color:'#fff'}}>Facility Name</TableCell>
+                <TableCell sx={{color:'#fff'}}>Facility Email</TableCell>
                 {
                    permission.facilities == "view_edit" &&
-                <TableCell>Actions</TableCell> 
+                <TableCell sx={{color:'#fff'}} >Actions</TableCell> 
                 }
               </TableRow>
             </TableHead>
@@ -181,8 +181,16 @@ const Facilities = () => {
                     </Tooltip>
                   </TableCell>
               }
+              
                 </TableRow>
               ))}
+              { (fData.length < 1 && !fl) &&
+          <TableRow >
+            <TableCell colSpan={4} sx={{textAlign:'center'}}>
+               No Data Found...
+            </TableCell>
+        </TableRow>
+        }
             </TableBody>
           </Table>
           </TableContainer>
@@ -194,11 +202,7 @@ const Facilities = () => {
 
           </>
         }
-        { (fData.length < 1 && !fl) &&
-          <Typography variant='h5' sx={{textAlign:'center', mt:5}}>
-          No Data Found...
-        </Typography>
-        }
+        
         <AddFacility open={isDialogOpen} close={()=>setDialogOpen(false)} onCreateSuccess={handleCreateSuccess}  />
         
         {/* -------------------EDIT FACILITY----------------- */}

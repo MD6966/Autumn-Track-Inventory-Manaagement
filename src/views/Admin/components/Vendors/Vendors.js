@@ -29,6 +29,7 @@ const Vendors = () => {
   const [open , setOpen] = React.useState(false)
   const [data, setData] =React.useState([])
   const [cData, setCdata] = React.useState([])
+  const [vL, setVl] = React.useState(false)
   const [editDialog, setEditDialog] = React.useState(false)
   const [id, setId] = React.useState('')
   const dispatch = useDispatch()
@@ -68,8 +69,10 @@ const handleSubmit = (e) => {
 }
 
   const getAllVendors = () => {
+    setVl(true)
     dispatch(getVendors()).then((result) => {
       setData(result.data.data)
+      setVl(false)
     }).catch((err) => {
       console.log(err)
     });
@@ -139,16 +142,16 @@ const handleSubmit = (e) => {
           </Button>
         }
         <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="Vendors Table">
-        <TableHead>
+      <Table className={classes.table} aria-label="Vendors Table" >
+        <TableHead sx={{background:theme.palette.primary.main}}>
           <TableRow>
-            <TableCell>Sr no</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Category</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell sx={{color:'#fff'}}>Sr no</TableCell>
+            <TableCell sx={{color:'#fff'}}>Name</TableCell>
+            <TableCell sx={{color:'#fff'}}>Category</TableCell>
+            <TableCell sx={{color:'#fff'}}>Email</TableCell>
             {
           permission.vendors == "view_edit" &&
-          <TableCell>Actions</TableCell>
+          <TableCell sx={{color:'#fff'}}>Actions</TableCell>
             }
           </TableRow>
         </TableHead>
@@ -190,11 +193,18 @@ const handleSubmit = (e) => {
             </TableRow>
             )
           })}
+           { (data.length < 1 && !vL) &&
+            <TableRow >
+            <TableCell colSpan={5} sx={{textAlign:'center'}}>
+               No Data Found...
+            </TableCell>
+        </TableRow>
+        }
         </TableBody>
       </Table>
     </TableContainer>
     {
-          data.length < 1 && <>
+          vL && <>
           <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
         <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />
         <Skeleton variant="rectangular" sx={{width:'100%', mb:1}}  height={80} />

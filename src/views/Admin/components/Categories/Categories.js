@@ -131,13 +131,13 @@ const Categories = () => {
           </Box>
           <TableContainer>
           <Table>
-            <TableHead>
+            <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell>Category Name</TableCell>
+                <TableCell sx={{color:'#fff'}}>Id</TableCell>
+                <TableCell sx={{color:'#fff'}}>Category Name</TableCell>
                   {
                   permission.categories == "view_edit" &&
-                <TableCell>Actions</TableCell>
+                <TableCell sx={{color:'#fff'}}>Actions</TableCell>
                   }
               </TableRow>
             </TableHead>
@@ -172,6 +172,13 @@ const Categories = () => {
                   }
                 </TableRow>
               ))}
+               { (data.length < 1 && !cl) &&
+            <TableRow >
+            <TableCell colSpan={4} sx={{textAlign:'center'}}>
+               No Data Found...
+            </TableCell>
+        </TableRow>
+        }
             </TableBody>
           </Table>
         </TableContainer>
@@ -184,11 +191,7 @@ const Categories = () => {
 
           </>
         }
-        { (data.length < 1 && !cl) &&
-           <Typography variant='h5' sx={{textAlign:'center', mt:5}}>
-           No Data Found...
-         </Typography>
-        }
+       
       </StyledRoot>
 
       {/* --------------UPDATE CATEGORY--------------  */}

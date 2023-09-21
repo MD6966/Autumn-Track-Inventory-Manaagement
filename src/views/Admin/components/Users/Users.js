@@ -139,7 +139,7 @@ const Users = () => {
       const navigate = useNavigate()
       const handleManage = (data) => {
         // console.log(data.permissions)
-        navigate(`/manage-roles`, {state:data})
+        navigate(`/admin/manage-roles`, {state:data})
       }
       const permission = useSelector((state)=>state.admin.user.permissions)
       const role = useSelector((state)=>state.admin.user.role)
@@ -161,20 +161,20 @@ const Users = () => {
           </Box>
           <TableContainer>
           <Table>
-            <TableHead>
+            <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Role</TableCell>
+                <TableCell sx={{color:'#fff'}}>Id</TableCell>
+                <TableCell sx={{color:'#fff'}}>Name</TableCell>
+                <TableCell sx={{color:'#fff'}}>Email</TableCell>
+                <TableCell sx={{color:'#fff'}}>Role</TableCell>
                {
                 
                 role == ("super_admin" || "regional_admin" )&&
-                <TableCell>Roles & Permissions</TableCell>
+                <TableCell sx={{color:'#fff'}}>Roles & Permissions</TableCell>
                }
                 {
            permission.users == "view_edit" &&
-           <TableCell>Actions</TableCell>
+           <TableCell sx={{color:'#fff'}}>Actions</TableCell>
                 }
               </TableRow>
             </TableHead>

@@ -50,6 +50,7 @@ export default function Router() {
             {path:'categories', element:<Categories />},
             {path:'vendors', element:<Vendors />},
             {path:'users', element:<Users />},
+            {path:'manage-roles', element: <ManageRolesPermissions />},
 
         ]
        },

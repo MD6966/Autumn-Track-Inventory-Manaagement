@@ -22,9 +22,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
 const StyledRoot = styled(Box)(({theme})=>({
-    padding:theme.spacing(10),
+    padding:theme.spacing(5),
     display:'flex',
-    justifyContent:'center',
+    // justifyContent:'center',
     alignItems:'center'
 }))
 
