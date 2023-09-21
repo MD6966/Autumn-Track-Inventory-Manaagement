@@ -1,7 +1,6 @@
 import React from 'react'
 import Page from '../../../../components/page'
-import { Box, Button, styled,
-  List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, 
+import { Box, Button, styled, IconButton, 
   Typography, Divider, useTheme, Tooltip,
   Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton,
   TextField,InputLabel,Select,Dialog,DialogActions,
@@ -11,7 +10,6 @@ import { Box, Button, styled,
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, getRoles, getUser, getUsers, updateUser } from '../../../../store/actions/adminActions';
 import AddUser from './components/AddUser';
@@ -19,19 +17,10 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useSnackbar } from 'notistack';
 import { RotatingLines } from 'react-loader-spinner';
-import ManageRolesPermissions from './components/ManageRoles&Permissions';
 import { useNavigate } from 'react-router';
 const StyledRoot = styled(Box)(({theme})=> ({
     padding: theme.spacing(3)
   }))
-  const useStyles = makeStyles((theme) => ({
-    listItemHover: {
-      '&:hover': {
-        backgroundColor: '#e2e2e2',
-      },
-    },
-  }));
-  
 const Users = () => {
  
     const initialValues ={
@@ -145,7 +134,7 @@ const Users = () => {
       const role = useSelector((state)=>state.admin.user.role)
   return (
     <Page
-    title="Categories"
+    title="Users"
     >
       <StyledRoot>
         {

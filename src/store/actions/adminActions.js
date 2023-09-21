@@ -370,7 +370,7 @@ export const  getDashboardCounts = () => async (dispatch) => {
       type:'GET_COUNTS',
       payload:res.data
     })
-    console.log(res, '+++++++')
+    // console.log(res, '+++++++')
       return res
   }
   catch(err) {
@@ -398,6 +398,94 @@ export const  UpdatePermissions = (body) => async (dispatch) => {
     const res = await api.post(`api/user_permissions`, body)
     dispatch({
       type:'UPDATE_PERMISSIONS',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+// -----------------INVOICES------------------------
+
+export const  getInvoices = (user_id, type) => async (dispatch) => {
+  console.log(user_id, '+++++++++++')
+  try{
+    const res = await api.get(`api/invoices?user_id=${user_id}&type=${type}`)
+    dispatch({
+      type:'GET_INVOICES',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  addInvoice = (body) => async (dispatch) => {
+  try{
+     const res = await api.post('api/invoices', body)
+     dispatch({
+       type:'ADD_INVOICE',
+       payload:res.data
+     })
+       return res
+   }
+   catch(err) {
+     throw err
+   }
+ }
+
+ export const  getInvoice = (id) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/invoices/${id}`)
+    dispatch({
+      type:'GET_INVOICE',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+
+export const  updateInvoice = (body,id) => async (dispatch) => {
+  try{
+    const res = await api.put(`api/invoices/${id}`, body)
+    dispatch({
+      type:'UPDATE_INVOICE',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  getUsersByRole = (role) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/getUsersByRole?role=${role}`)
+    dispatch({
+      type:'GET_USERS_BY_ROLE',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  uploadInvoice = (body) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/uploads`, body)
+    dispatch({
+      type:'UPLOAD_INVOICE',
       payload:res.data
     })
       return res

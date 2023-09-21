@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {getUserPermissions} from '../../../../../store/actions/adminActions'
 import { useLocation, useParams } from 'react-router';
 import RolesPermissions from './RolesPermissions';
-
+import Page from '../../../../../components/page';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
@@ -58,7 +58,9 @@ const StyledRoot = styled(Box)(({theme})=>({
 const ManageRolesPermissions = () => {
   const {state} = useLocation()
   return (
-    <div>
+    <Page
+    title="Roles & Permissions"
+    >
       <AppBar position='static'>
         <Toolbar>
           Manage Roles And Permissions
@@ -205,7 +207,7 @@ const ManageRolesPermissions = () => {
         </StyledRoot>
       </Dialog> */}
 
-    </div>
+    </Page>
   )
 }
 
