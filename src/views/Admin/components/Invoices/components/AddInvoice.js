@@ -14,12 +14,13 @@ const AddInvoice = (props) => {
     const user = useSelector((state)=> state.admin.user)
     // console.log(user.vendor)
     const initialValues ={
-        category_id:user.vendor.category_id,
+        category_id:user.vendor ? user.vendor.category_id : 'Not Found',
         user_id:user.id,
         invoice_number:'',
         total_amount_due:'',
         upload_id:'',
-        assign:''
+        assign:'',
+        status:'new'
       }
       const [dateOfInvoice, setDateOfInvoice] = React.useState(null)
       const [dueDate , setDueDate] = React.useState(null)

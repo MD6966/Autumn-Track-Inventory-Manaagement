@@ -363,9 +363,9 @@ export const  updateUser = (body,id) => async (dispatch) => {
 //--------------DAHSBOARD COUNT--------------
 
 
-export const  getDashboardCounts = () => async (dispatch) => {
+export const  getDashboardCounts = (id) => async (dispatch) => {
   try{
-    const res = await api.get('api/getDashboardCounts')
+    const res = await api.get(`api/getDashboardCounts?user_id=${id}`)
     dispatch({
       type:'GET_COUNTS',
       payload:res.data
@@ -410,7 +410,7 @@ export const  UpdatePermissions = (body) => async (dispatch) => {
 // -----------------INVOICES------------------------
 
 export const  getInvoices = (user_id, type) => async (dispatch) => {
-  console.log(user_id, '+++++++++++')
+  // console.log(user_id, '+++++++++++')
   try{
     const res = await api.get(`api/invoices?user_id=${user_id}&type=${type}`)
     dispatch({
@@ -488,6 +488,16 @@ export const  uploadInvoice = (body) => async (dispatch) => {
       type:'UPLOAD_INVOICE',
       payload:res.data
     })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  changeInvoiceStatus = (id, status) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/status/change/${id}/${status}`,)
       return res
   }
   catch(err) {
