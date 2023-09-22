@@ -21,6 +21,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import PeopleIcon from '@mui/icons-material/People';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import { adminLogOut } from '../../store/actions/adminActions';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 const useStyles = makeStyles((theme)=> ({
     selected : {
       background:'#fcbd6a',
@@ -49,6 +50,7 @@ const useStyles = makeStyles((theme)=> ({
    }))
    const Dashboard = () => {
      const permission = useSelector((state)=>state.admin.user.permissions)
+     console.log(permission)
      const user = useSelector((state)=>state.admin.user)
     //  console.log(userId)
      const ListData = [
@@ -68,6 +70,17 @@ const useStyles = makeStyles((theme)=> ({
       {id:6, title:'Users', icon:<PeopleIcon />, to:'/admin/users',
       permission:permission.users
     },
+    {id:7, title:'New Invoices', icon:<ReceiptIcon />, to:'/admin/new-invoices',
+    permission:permission.new_invoices
+  },
+  {id:8, title:'Approved By Admin', icon:<CheckBoxIcon />, to:'/admin/approved-by-admin',
+  permission:permission.approved_by_admin
+  },
+  {id:9, title:'Approved By RA', icon:<CheckBoxIcon />, to:'/admin/approved-by-ra',
+  permission:permission.approved_by_RA
+
+  },
+
       
     ]
      const [selectedIndex, setSelectedIndex] = React.useState(1);
@@ -159,10 +172,10 @@ const useStyles = makeStyles((theme)=> ({
             <Box sx={{display:'flex', justifyContent:'center',}}>
               <Avatar src='/assets/images/admin.webp' sx={{height:'120px', width:'120px', mt:'2rem'}} />
             </Box>
-            <Typography sx={{color:'#fff', textAlign:'center'}} variant='h6' gutterBottom> {user.role_name} </Typography>
+            <Typography sx={{color:'#fff', textAlign:'center'}} variant='h6' gutterBottom> {user.name} </Typography>
             <Divider /> 
             <Box sx={{p:1}}>
-              <Typography sx={{color:'#fff', fontSize:'15px', mt:1 }}> Admin Dashboard</Typography>
+              <Typography sx={{color:'#fff', fontSize:'15px', mt:1 }}> {user.role_name} Dashboard</Typography>
               <List component="nav">
                 {ListData.map((val)=> {
                   return(

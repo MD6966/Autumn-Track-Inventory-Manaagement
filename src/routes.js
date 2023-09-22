@@ -18,6 +18,9 @@ import Invoices from "./views/User/components/Invoices";
 import Users from "./views/Admin/components/Users";
 import ManageInvoices from "./views/Admin/components/Invoices/ManageInvoices";
 import ManageRolesPermissions from "./views/Admin/components/Users/components/ManageRoles&Permissions";
+import NewInvoices from "./views/Admin/components/NewInvoices";
+import ApprByAdm from "./views/Admin/components/ApprByAdm";
+import ApprByRA from "./views/Admin/components/ApprByRA";
 
 export default function Router() {
     let element = useRoutes([
@@ -51,6 +54,10 @@ export default function Router() {
             {path:'vendors', element:<Vendors />},
             {path:'users', element:<Users />},
             {path:'manage-roles', element: <ManageRolesPermissions />},
+            {path:'new-invoices', element: <NewInvoices />},
+            {path:'approved-by-admin', element: <ApprByAdm />},
+            {path:'approved-by-ra', element: <ApprByRA />},
+
 
         ]
        },
