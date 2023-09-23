@@ -504,3 +504,13 @@ export const  changeInvoiceStatus = (id, status) => async (dispatch) => {
     throw err
   }
 }
+
+export const  changeInvoiceAssign = (InvoiceId, assignId, status) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/status/change/${InvoiceId}/${assignId}/${status}`,)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}

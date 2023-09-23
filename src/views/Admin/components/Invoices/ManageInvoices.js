@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeInvoiceStatus, getInvoices } from '../../../../store/actions/adminActions';
 import AddInvoice from './components/AddInvoice';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import ApproveInvoices from './components/ApproveInvoices';
+import { useSnackbar } from 'notistack';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -30,11 +32,15 @@ const ManageInvoices = () => {
     assign:''
   }
   const [formValues, setFormValues] = React.useState(initialValues)
+const {enqueueSnackbar} = useSnackbar()
 const [open , setOpen] = React.useState(false)
+const [apOpen, setApOpen] = React.useState(false)
 const dispatch = useDispatch()
 const theme = useTheme()
 const user_Id = useSelector((state)=>state.admin.user.id)
 const [data , setData] = React.useState([])
+const [invoiceId, setInvoiceId] = React.useState('')
+const [aLoading, setALoading] = React.useState(false)
 // console.log(data, "Thisssss")
 const [iL, setIl] = React.useState(false)
 const type = 'total_invoices'
@@ -73,8 +79,39 @@ const handleCreateSuccess = () => {
     }
 
   }
+  const handleApprove = (val) => {
+    if(role=="regional_admin") {
+      // setInvoiceId(val)
+      handleApproveRA(val)
+    }
+    else {
+      setInvoiceId(val)
+      setApOpen(true)
+    }
+  }
+  const createSuccess  =() => {
+    setApOpen(false);
+    getAllInoices()
+   
+  }
+  const handleApproveRA =(val) => {
+    // console.log(invoiceId, '+++++')
+    setALoading(true)
+    const status = 'approved_for_payment'
+    dispatch(changeInvoiceStatus(val, status)).then((result) => {
+      enqueueSnackbar(result.data.message, {
+        variant:'success'
+      })
+      getAllInoices()
+      setALoading(false)
+    }).catch((err) => {
+      setALoading(false)
+      console.log(err)
+    });
+  }
   const permissions = useSelector((state)=>state.admin.user.permissions)
   const role = useSelector((state)=>state.admin.user.role)
+  // console.log(role) 
 
   return (
     <Page
@@ -107,6 +144,10 @@ const handleCreateSuccess = () => {
                 <TableCell sx={{color:'#fff'}}>Vendor</TableCell>
                 }
                 <TableCell sx={{color:'#fff'}}>Invoice</TableCell>
+                {
+                  role == 'vendor' ? null :
+                <TableCell sx={{color:'#fff'}}>Approve</TableCell>
+                }
                 <TableCell sx={{color:'#fff'}}>User</TableCell>
                 {
                   permissions.invoices == 'view_edit' ? 
@@ -145,6 +186,16 @@ const handleCreateSuccess = () => {
                       View
                     </Button>
                   </TableCell>
+                  {
+                  role == 'vendor' ? null :
+                <TableCell>
+                  <Button variant={aLoading ? 'disabled' : 'outlined'}
+                  onClick={()=>handleApprove(item.id)}
+                  >
+                    Approve
+                  </Button>
+                </TableCell>
+                  }
                   <TableCell>{item.assign ? item.assign.name : "User Deleted"}</TableCell>
                   {
                     permissions.invoices == 'view_edit' ?
@@ -196,6 +247,28 @@ const handleCreateSuccess = () => {
       close={()=>setOpen(false)}
        onCreateSuccess={handleCreateSuccess}
       />
+      {
+        role =="user" ? 
+        <ApproveInvoices
+        status='pending_admin_approval' 
+        invoiceId = {invoiceId}
+        createSuccess = {createSuccess}
+        open={apOpen}
+        close = {()=>setApOpen(false)}
+        data = "admin"
+        /> : role == "admin" ?
+        <ApproveInvoices
+        status='pending_ap_approval'
+        invoiceId = {invoiceId}
+        open={apOpen}
+        createSuccess = {createSuccess}
+        close = {()=>setApOpen(false)}
+        data="regional_admin"
+        />
+        : null
+      }
+     
+
     </Page>
   )
 }
