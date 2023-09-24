@@ -21,6 +21,7 @@ import ManageRolesPermissions from "./views/Admin/components/Users/components/Ma
 import NewInvoices from "./views/Admin/components/NewInvoices";
 import ApprByAdm from "./views/Admin/components/ApprByAdm";
 import ApprByRA from "./views/Admin/components/ApprByRA";
+import ArchivedInvoices from "./views/Admin/components/Invoices/components/ArchivedInvoices";
 
 export default function Router() {
     let element = useRoutes([
@@ -56,6 +57,7 @@ export default function Router() {
             {path:'manage-roles', element: <ManageRolesPermissions />},
             {path:'new-invoices', element: <NewInvoices />},
             {path:'approved-by-admin', element: <ApprByAdm />},
+            {path:'archived', element: <ArchivedInvoices />},
             {path:'approved-by-ra', element: <ApprByRA />},
 
 

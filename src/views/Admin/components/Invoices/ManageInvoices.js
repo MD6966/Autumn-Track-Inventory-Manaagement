@@ -5,7 +5,6 @@ import { Box, Button, styled, IconButton,
   Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton,
   TextField,InputLabel,Select,Dialog,DialogActions,
   DialogTitle,FormControl,MenuItem,DialogContent, Avatar 
-
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -16,7 +15,10 @@ import AddInvoice from './components/AddInvoice';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ApproveInvoices from './components/ApproveInvoices';
 import { useSnackbar } from 'notistack';
-
+import AddIcon from '@mui/icons-material/Add';
+import ArchiveDialog from './components/ArchiveDialog';
+import { Link } from 'react-router-dom';
+import ArchiveIcon from '@mui/icons-material/Archive';
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -49,7 +51,10 @@ const [statuses, setStatuses]=React.useState([])
 const [sId, setSid]=React.useState('')
 const [statusDialog, setStatusDialog]=React.useState(false)
 const [sLoading, setSloading] = React.useState(false)
+const [archiveOpen, setArchiveOpen] = React.useState(false)
+const [archiveId, setArchiveId] =React.useState('')
 const type = 'total_invoices'
+
 const getAllInoices = () => {
   setIl(true)
   dispatch(getInvoices(user_Id, type)).then((result) => {
@@ -151,6 +156,14 @@ const handleCreateSuccess = () => {
       console.log(err)
     });
   }
+  const handleArchiveDialog = (val) => {
+    setArchiveOpen(true)
+    setArchiveId(val.id)
+  }
+  const invoiceArchiveSuccess = () => {
+    setArchiveOpen(false)
+    getAllInoices()
+  }
   // console.log(arr)
   const permissions = useSelector((state)=>state.admin.user.permissions)
   const role = useSelector((state)=>state.admin.user.role)
@@ -168,6 +181,17 @@ const handleCreateSuccess = () => {
           </Button>
           : null
       }
+      {
+        role == 'admin' ? 
+        <Button variant='contained'
+        component={Link}
+        to="/admin/archived"
+        endIcon={<ArchiveIcon />}
+        >
+        View Archived Invoices
+      </Button>
+      : null
+      }
           <Box sx={{mt:2, mb:2}}>
             <Typography variant='h4' fontWeight="bold" textAlign="center">
               All Invoices
@@ -182,6 +206,11 @@ const handleCreateSuccess = () => {
                 <TableCell sx={{color:'#fff'}}>Due Date</TableCell>
                 <TableCell sx={{color:'#fff'}}>Amount Due</TableCell>
                 <TableCell sx={{color:'#fff'}}>Status</TableCell>
+                {
+                  role=="admin" ?
+                <TableCell sx={{color:'#fff'}}>Archive</TableCell>
+                  : null
+                }
                 {
                   role == 'super_admin' ? 
                   <TableCell sx={{color:'#fff'}}>Change Status</TableCell>
@@ -217,6 +246,21 @@ const handleCreateSuccess = () => {
                   <TableCell>{item.due_date}</TableCell>
                   <TableCell>{item.total_amount_due}</TableCell>
                   <TableCell>{item.status_name}</TableCell>
+                  {
+                    role=="admin" ?
+                  <TableCell>
+                    <Button
+                    variant='outlined'
+                    onClick={()=>handleArchiveDialog(item)}
+                    endIcon={
+                      <AddIcon />
+                    }
+                    >
+                      Archive
+                    </Button>
+                  </TableCell>
+                    : null
+                  }
                   {
                     role=='super_admin' ? 
                   <TableCell>
@@ -372,6 +416,12 @@ const handleCreateSuccess = () => {
          
         </DialogActions>
       </Dialog>
+      <ArchiveDialog 
+      open={archiveOpen}
+      close={()=>setArchiveOpen(false)}
+      invoiceId={archiveId}
+      createSuccess = {invoiceArchiveSuccess}
+      />
     </Page>
   )
 }

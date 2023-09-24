@@ -528,3 +528,33 @@ export const  getInvoiceStatuses = () => async (dispatch) => {
     throw err
   }
 }
+
+export const  addToArchive = (InvoiceId, body) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/archived/add/${InvoiceId}`, body)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  getArchivedInvoices = (user_id) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/invoices?user_id=${user_id}&type=total_invoices&archives=1`)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  removeFromArchive = (id) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/invoice/archived/remove/${id}`)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
