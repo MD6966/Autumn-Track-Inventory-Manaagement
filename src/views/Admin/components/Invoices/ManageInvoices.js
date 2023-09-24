@@ -11,11 +11,12 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeInvoiceStatus, getInvoices } from '../../../../store/actions/adminActions';
+import { changeInvoiceStatus, getInvoiceStatuses, getInvoices } from '../../../../store/actions/adminActions';
 import AddInvoice from './components/AddInvoice';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ApproveInvoices from './components/ApproveInvoices';
 import { useSnackbar } from 'notistack';
+
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -42,7 +43,12 @@ const [data , setData] = React.useState([])
 const [invoiceId, setInvoiceId] = React.useState('')
 const [aLoading, setALoading] = React.useState(false)
 // console.log(data, "Thisssss")
+const [age, setAge] = React.useState('');
 const [iL, setIl] = React.useState(false)
+const [statuses, setStatuses]=React.useState([])
+const [sId, setSid]=React.useState('')
+const [statusDialog, setStatusDialog]=React.useState(false)
+const [sLoading, setSloading] = React.useState(false)
 const type = 'total_invoices'
 const getAllInoices = () => {
   setIl(true)
@@ -55,6 +61,7 @@ const getAllInoices = () => {
 }
 React.useEffect(()=> {
   getAllInoices()
+  // getInvoiceStatuses()
 }, [])
 const handleEdit = () => {
 
@@ -109,6 +116,42 @@ const handleCreateSuccess = () => {
       console.log(err)
     });
   }
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
+  const getStatuses = () => {
+    dispatch(getInvoiceStatuses()).then((result) => {
+      setStatuses(result.data.data)
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
+  React.useEffect(()=> {
+    getStatuses()
+  },[])
+  const arr = Object.keys(statuses).map((key) => ({
+    key,
+    value: statuses[key],
+  }));
+  const handleClick = (val) => {
+    setStatusDialog(true)
+    setSid(val.id)
+  }
+  const changeStatus = () => {
+    setSloading(true)
+    dispatch(changeInvoiceStatus(sId, age)).then((result) => {
+      enqueueSnackbar(result.data.message, {
+        variant:'success'
+      })
+      setSloading(false)
+      setStatusDialog(false)
+      getAllInoices();
+    }).catch((err) => {
+      setSloading(false)
+      console.log(err)
+    });
+  }
+  // console.log(arr)
   const permissions = useSelector((state)=>state.admin.user.permissions)
   const role = useSelector((state)=>state.admin.user.role)
   // console.log(role) 
@@ -140,6 +183,12 @@ const handleCreateSuccess = () => {
                 <TableCell sx={{color:'#fff'}}>Amount Due</TableCell>
                 <TableCell sx={{color:'#fff'}}>Status</TableCell>
                 {
+                  role == 'super_admin' ? 
+                  <TableCell sx={{color:'#fff'}}>Change Status</TableCell>
+                  : null
+                }
+
+                {
                   role == 'vendor' ? null :
                 <TableCell sx={{color:'#fff'}}>Vendor</TableCell>
                 }
@@ -168,6 +217,17 @@ const handleCreateSuccess = () => {
                   <TableCell>{item.due_date}</TableCell>
                   <TableCell>{item.total_amount_due}</TableCell>
                   <TableCell>{item.status_name}</TableCell>
+                  {
+                    role=='super_admin' ? 
+                  <TableCell>
+                    <Button variant='outlined'
+                    onClick={()=>handleClick(item)}
+                    >
+                      Change
+                    </Button>
+                  </TableCell>
+                  : null
+                  }
                   {
                   role == 'vendor' ? null :
                   <TableCell>{item.vendor ? item.vendor.name : 'Vendor Deleted'}</TableCell>
@@ -268,9 +328,53 @@ const handleCreateSuccess = () => {
         : null
       }
      
-
+      <Dialog open={statusDialog} 
+      onClose={()=>setStatusDialog(false)}
+      fullWidth>
+        <DialogTitle>
+          Change Status
+        </DialogTitle>
+        <Divider />
+        <DialogContent>
+        <FormControl fullWidth>
+<InputLabel id="demo-simple-select-label">Status</InputLabel>
+<Select
+  labelId="demo-simple-select-label"
+  id="demo-simple-select"
+  value={age}
+  label="Status"
+  onChange={handleChange}
+>
+  {
+    arr.map((val,ind)=> {
+      // console.log(val)
+      return(
+        <MenuItem value={val.key}>{val.value}</MenuItem>
+      )
+    })
+  }
+</Select>
+</FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button variant='outlined' onClick={()=>setStatusDialog(false)}>
+            Cancel
+          </Button>
+          {
+            sLoading ? 
+            <Button variant='disabled'>
+            ...Loading
+          </Button> :
+           <Button variant='contained' onClick={changeStatus}>
+           Change
+         </Button>
+          }
+         
+        </DialogActions>
+      </Dialog>
     </Page>
   )
 }
 
 export default ManageInvoices
+

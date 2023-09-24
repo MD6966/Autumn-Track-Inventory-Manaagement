@@ -514,3 +514,17 @@ export const  changeInvoiceAssign = (InvoiceId, assignId, status) => async (disp
     throw err
   }
 }
+
+export const  getInvoiceStatuses = () => async (dispatch) => {
+  try{
+    const res = await api.get(`api/invoice/status`)
+    dispatch({
+      type:'GET_STATUSES',
+      payload:res.data
+    })
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
