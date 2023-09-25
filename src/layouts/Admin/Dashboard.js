@@ -62,7 +62,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 const Dashboard = () => {
   const permission = useSelector((state) => state.admin.user.permissions);
-  console.log(permission);
+  // console.log(permission);
   const user = useSelector((state) => state.admin.user);
   //  console.log(userId)
   const ListData = [
@@ -175,7 +175,7 @@ const Dashboard = () => {
         <StyledRoot>
           <StyledToolbar>
             <Box sx={{ flex: 1 }}>
-              <Typography> Admin Pannel </Typography>
+              <Typography> {user.role_name} Pannel </Typography>
             </Box>
             <Box>
               <Button

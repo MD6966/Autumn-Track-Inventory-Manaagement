@@ -1,9 +1,10 @@
 import React from 'react'
 import Page from '../../../../../components/page'
-import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, styled, useTheme } from '@mui/material'
+import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, Table, TableBody, TableCell, TableHead, TableRow, styled, useTheme } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { getArchivedInvoices, removeFromArchive } from '../../../../../store/actions/adminActions'
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import { useSnackbar } from 'notistack'
 const StyledRoot = styled(Box)(({theme})=> ({
     padding: theme.spacing(3)
   }))
@@ -11,7 +12,10 @@ const ArchivedInvoices = () => {
     const theme = useTheme()
     const id = useSelector((state)=>state.admin.user.id)
     const [invoices, setInvoices]=React.useState([])
+    const [open, setOpen] = React.useState(false)
+    const [loading, setLoading] = React.useState(false)
     const dispatch = useDispatch()
+    const {enqueueSnackbar} = useSnackbar()
     const getInvoices = () => {
         dispatch(getArchivedInvoices(id)).then((result) => {
             setInvoices(result.data.data.total_invoices)
@@ -22,9 +26,16 @@ const ArchivedInvoices = () => {
     React.useEffect(() => {
         getInvoices()
     },[])
-    const handleUnArchive = (id) => {
-        dispatch(removeFromArchive(id)).then((result) => {
-            console.log(result)
+    const handleUnArchive = (val) => {
+        setLoading(true)
+        dispatch(removeFromArchive(id,val)).then((result) => {
+            setLoading(false)
+            getInvoices()
+            setOpen(false)
+            enqueueSnackbar(result.data.message, {
+                variant:'success'
+            })
+            
         }).catch((err) => {
             console.log(err)
         });
@@ -78,6 +89,15 @@ const ArchivedInvoices = () => {
                    
                 </TableBody>
             </Table>
+            <Dialog open={loading}>
+                    <DialogTitle>Loading.......</DialogTitle>
+                    <Divider />
+                    <DialogContent>
+                        <Box sx={{display:'flex', justifyContent:'center'}}>
+                        <CircularProgress />
+                        </Box>
+                    </DialogContent>
+            </Dialog>
         </StyledRoot>
     </Page>
   )

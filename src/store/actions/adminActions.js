@@ -549,9 +549,29 @@ export const  getArchivedInvoices = (user_id) => async (dispatch) => {
   }
 }
 
-export const  removeFromArchive = (id) => async (dispatch) => {
+export const  removeFromArchive = (user_id, invoice_id) => async (dispatch) => {
   try{
-    const res = await api.get(`api/invoice/archived/remove/${id}`)
+    const res = await api.post(`api/invoice/archived/remove/${user_id}/${invoice_id}`)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  addInternalNote = (body) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/notes`, body)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  getInternalNotes = (invoice_id) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/invoice/notes?invoice_id=${invoice_id}`)
       return res
   }
   catch(err) {

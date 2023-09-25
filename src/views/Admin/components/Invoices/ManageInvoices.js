@@ -4,13 +4,13 @@ import { Box, Button, styled, IconButton,
   Typography, Divider, useTheme, Tooltip,
   Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton,
   TextField,InputLabel,Select,Dialog,DialogActions,
-  DialogTitle,FormControl,MenuItem,DialogContent, Avatar 
+  DialogTitle,FormControl,MenuItem,DialogContent, Avatar, Input, InputAdornment 
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeInvoiceStatus, getInvoiceStatuses, getInvoices } from '../../../../store/actions/adminActions';
+import { changeInvoiceStatus, getInternalNotes, getInvoiceStatuses, getInvoices } from '../../../../store/actions/adminActions';
 import AddInvoice from './components/AddInvoice';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ApproveInvoices from './components/ApproveInvoices';
@@ -19,6 +19,9 @@ import AddIcon from '@mui/icons-material/Add';
 import ArchiveDialog from './components/ArchiveDialog';
 import { Link } from 'react-router-dom';
 import ArchiveIcon from '@mui/icons-material/Archive';
+import InternalNoteDialog from './components/InternalNoteDialog';
+import SearchIcon from '@mui/icons-material/Search';
+
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
 }))
@@ -53,6 +56,11 @@ const [statusDialog, setStatusDialog]=React.useState(false)
 const [sLoading, setSloading] = React.useState(false)
 const [archiveOpen, setArchiveOpen] = React.useState(false)
 const [archiveId, setArchiveId] =React.useState('')
+const [noteDialog, setNoteDialog] = React.useState(false)
+const [noteId, setNoteId] = React.useState('')
+const [noteData, setNoteData] = React.useState([])
+const [searchInput, setSearchInput] = React.useState("")
+const [filteredData, setFilteredData] = React.useState([])
 const type = 'total_invoices'
 
 const getAllInoices = () => {
@@ -164,6 +172,48 @@ const handleCreateSuccess = () => {
     setArchiveOpen(false)
     getAllInoices()
   }
+  const handleNoteDialog = (id) => {
+      setNoteId(id)
+      setNoteDialog(true)
+  }
+  const getNotes = () => {
+    dispatch(getInternalNotes(noteId)).then((result) => {
+        setNoteData(result.data.data)
+    }).catch((err) => {
+        console.log(err)
+    });
+  }
+  React.useEffect(() => {
+        getNotes()
+  }, [noteId])
+  const createNoteSuccess = () => {
+    setNoteDialog(false)
+    setNoteId('')
+    getNotes()
+  }
+  const handleChangeSearch =(e) => {
+    setSearchInput(e.target.value);
+      filterData(e.target.value);
+  }
+  const filterData = (searchText) => {
+    const filtered = data.filter((data) => {
+    return (
+      data.invoice_number.toLowerCase().includes(searchText.toLowerCase())||
+      data.vendor && data.vendor.name.toLowerCase().includes(searchText.toLowerCase())||
+      data.assign && data.assign.name.toLowerCase().includes(searchText.toLowerCase())
+
+      // data.address.toLowerCase().includes(searchText.toLowerCase())
+    );
+    });
+    setFilteredData(filtered);
+    };
+    React.useEffect(() => {
+      if (searchInput === "") {
+        setFilteredData(data);
+      } else {
+        filterData(searchInput);
+      }
+    }, [searchInput, data, filteredData]);
   // console.log(arr)
   const permissions = useSelector((state)=>state.admin.user.permissions)
   const role = useSelector((state)=>state.admin.user.role)
@@ -174,7 +224,9 @@ const handleCreateSuccess = () => {
     title="invoices"
     >
       <StyledRoot>
-        {
+        <Box sx={{display:'flex', justifyContent:'space-between'}}>
+          <Box>
+          {
           permissions.invoices == 'view_edit' ? 
       <Button variant='contained' endIcon={<AddCircleIcon />} onClick={()=>setOpen(true)}>
             Add Invoice
@@ -182,9 +234,10 @@ const handleCreateSuccess = () => {
           : null
       }
       {
-        role == 'admin' ? 
+        role == 'super_admin' ? 
         <Button variant='contained'
         component={Link}
+        sx={{ml:2}}
         to="/admin/archived"
         endIcon={<ArchiveIcon />}
         >
@@ -192,6 +245,29 @@ const handleCreateSuccess = () => {
       </Button>
       : null
       }
+          </Box>
+          <Box>
+          <FormControl
+
+        sx={{width:'100%',}}
+        >
+          <InputLabel> Search </InputLabel>
+          <Input 
+          placeholder='invoice number/vendor/user'
+           value={searchInput}
+           onChange={(e) => handleChangeSearch(e)}
+          endAdornment={
+            <InputAdornment position='end'>
+            <SearchIcon />
+            </InputAdornment>
+          }
+          
+          
+          />
+        </FormControl>
+          </Box>
+        </Box>
+      
           <Box sx={{mt:2, mb:2}}>
             <Typography variant='h4' fontWeight="bold" textAlign="center">
               All Invoices
@@ -207,7 +283,7 @@ const handleCreateSuccess = () => {
                 <TableCell sx={{color:'#fff'}}>Amount Due</TableCell>
                 <TableCell sx={{color:'#fff'}}>Status</TableCell>
                 {
-                  role=="admin" ?
+                  role=="super_admin" ?
                 <TableCell sx={{color:'#fff'}}>Archive</TableCell>
                   : null
                 }
@@ -216,6 +292,7 @@ const handleCreateSuccess = () => {
                   <TableCell sx={{color:'#fff'}}>Change Status</TableCell>
                   : null
                 }
+                <TableCell sx={{color:'#fff'}}>Internal Note</TableCell>
 
                 {
                   role == 'vendor' ? null :
@@ -237,7 +314,7 @@ const handleCreateSuccess = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((item) => {
+              {filteredData.map((item) => {
                 // console.log(item, "+++++++")
                 return(
                   <TableRow key={item.id}>
@@ -247,7 +324,7 @@ const handleCreateSuccess = () => {
                   <TableCell>{item.total_amount_due}</TableCell>
                   <TableCell>{item.status_name}</TableCell>
                   {
-                    role=="admin" ?
+                    role=="super_admin" ?
                   <TableCell>
                     <Button
                     variant='outlined'
@@ -272,6 +349,13 @@ const handleCreateSuccess = () => {
                   </TableCell>
                   : null
                   }
+                  <TableCell>
+                    <Button variant='outlined' endIcon={<AddIcon />}
+                    onClick={()=>handleNoteDialog(item.id)}
+                    >
+                      Add
+                    </Button>
+                  </TableCell>
                   {
                   role == 'vendor' ? null :
                   <TableCell>{item.vendor ? item.vendor.name : 'Vendor Deleted'}</TableCell>
@@ -421,6 +505,13 @@ const handleCreateSuccess = () => {
       close={()=>setArchiveOpen(false)}
       invoiceId={archiveId}
       createSuccess = {invoiceArchiveSuccess}
+      />
+      <InternalNoteDialog 
+      open={noteDialog}
+      close = {()=>setNoteDialog(false)}
+      invoiceId = {noteId}
+      data = {noteData}
+      createsuccess = {createNoteSuccess}
       />
     </Page>
   )
