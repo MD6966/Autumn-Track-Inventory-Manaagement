@@ -22,6 +22,7 @@ import NewInvoices from "./views/Admin/components/NewInvoices";
 import ApprByAdm from "./views/Admin/components/ApprByAdm";
 import ApprByRA from "./views/Admin/components/ApprByRA";
 import ArchivedInvoices from "./views/Admin/components/Invoices/components/ArchivedInvoices";
+import Chats from "./views/Admin/components/Invoices/components/Chats";
 
 export default function Router() {
     let element = useRoutes([
@@ -59,6 +60,8 @@ export default function Router() {
             {path:'approved-by-admin', element: <ApprByAdm />},
             {path:'archived', element: <ArchivedInvoices />},
             {path:'approved-by-ra', element: <ApprByRA />},
+            {path:'chat/:id', element: <Chats />},
+
 
 
         ]

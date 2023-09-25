@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import InternalNoteDialog from './components/InternalNoteDialog';
 import SearchIcon from '@mui/icons-material/Search';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
@@ -199,8 +200,8 @@ const handleCreateSuccess = () => {
     const filtered = data.filter((data) => {
     return (
       data.invoice_number.toLowerCase().includes(searchText.toLowerCase())||
-      data.vendor && data.vendor.name.toLowerCase().includes(searchText.toLowerCase())||
-      data.assign && data.assign.name.toLowerCase().includes(searchText.toLowerCase())
+      data.vendor && data.vendor.name.toLowerCase().includes(searchText.toLowerCase())
+      // data.assign && data.assign.name.toLowerCase().includes(searchText.toLowerCase())
 
       // data.address.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -303,6 +304,8 @@ const handleCreateSuccess = () => {
                   role == 'vendor' ? null :
                 <TableCell sx={{color:'#fff'}}>Approve</TableCell>
                 }
+                <TableCell sx={{color:'#fff'}}>Chat</TableCell>
+
                 <TableCell sx={{color:'#fff'}}>User</TableCell>
                 {
                   permissions.invoices == 'view_edit' ? 
@@ -384,7 +387,18 @@ const handleCreateSuccess = () => {
                   </Button>
                 </TableCell>
                   }
-                  <TableCell>{item.assign ? item.assign.name : "User Deleted"}</TableCell>
+                  <TableCell>
+                    <Tooltip title="Chat">
+                   <IconButton
+                   component={Link}
+                   to={`/admin/chat/${item.id}`}
+                   >
+                        <ChatIcon />
+                   </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>{"User Deleted"}</TableCell>
+
                   {
                     permissions.invoices == 'view_edit' ?
                   <TableCell>

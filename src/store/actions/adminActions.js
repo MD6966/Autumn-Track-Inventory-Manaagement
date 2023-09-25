@@ -578,3 +578,24 @@ export const  getInternalNotes = (invoice_id) => async (dispatch) => {
     throw err
   }
 }
+
+
+export const  sendMessage = (body) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/chats`, body)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  getMsgs = (invoice_id) => async (dispatch) => {
+  try{
+    const res = await api.get(`api/invoice/chats?invoice_id=${invoice_id}`)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
