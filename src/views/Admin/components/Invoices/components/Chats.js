@@ -85,6 +85,7 @@ const Chats = () => {
   <TextField 
     placeholder='Write Something Here'
     name='message'
+    autoComplete='off'
     value={message}
     onChange={(e)=>setMessage(e.target.value)}
     sx={{ width: '65%',ml:5 }}
