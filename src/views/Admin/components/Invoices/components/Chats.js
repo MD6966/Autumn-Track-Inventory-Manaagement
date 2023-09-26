@@ -27,6 +27,7 @@ const Chats = () => {
         dispatch(sendMessage(body)).then((result) => {
             setLoading(false)
             getMessages()
+            setMessage('')
         }).catch((err) => {
             setLoading(false)
             console.log(err)
@@ -35,13 +36,17 @@ const Chats = () => {
     const getMessages = () => {
         dispatch(getMsgs(id)).then((result) => {
             setMessages(result.data.data)
-            setMessage('')
         }).catch((err) => {
             console.log(err)
         });
     }
     React.useEffect(()=> {
         getMessages()
+        const intervalId = setInterval(getMessages, 5000);
+        return () => {
+            clearInterval(intervalId);
+          };
+      
     },[])
     const scrollref = React.useRef()
     React.useEffect(()=> {
