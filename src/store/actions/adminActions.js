@@ -504,6 +504,15 @@ export const  changeInvoiceStatus = (id, status) => async (dispatch) => {
     throw err
   }
 }
+export const  changeInvoiceStatus2 = (id, status) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/status/approved/${id}/${status}`,)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
 
 export const  changeInvoiceAssign = (InvoiceId, assignId, status) => async (dispatch) => {
   try{
@@ -593,6 +602,16 @@ export const  sendMessage = (body) => async (dispatch) => {
 export const  getMsgs = (invoice_id) => async (dispatch) => {
   try{
     const res = await api.get(`api/invoice/chats?invoice_id=${invoice_id}`)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
+
+export const  assignFacility = (invoice_id, facility_id) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/facility/assign/${invoice_id}/${facility_id}`)
       return res
   }
   catch(err) {

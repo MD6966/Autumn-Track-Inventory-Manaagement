@@ -5,7 +5,6 @@ import { addInternalNote, getInternalNotes } from '../../../../../store/actions/
 import { useSnackbar } from 'notistack'
 
 const InternalNoteDialog = (props) => {
-    console.log(props.data)
   const theme = useTheme()
   const user_Id = useSelector((state)=> state.admin.user.id)
   const [note, setNote] = React.useState('')

@@ -10,7 +10,6 @@ import { changeInvoiceAssign, getUsersByRole } from '../../../../../store/action
 import { useSnackbar } from 'notistack';
 import { RotatingLines } from 'react-loader-spinner';
 const ApproveInvoices = (props) => {
-    console.log(props.invoiceId)
     const [data , setData] = React.useState([])
     const dispatch = useDispatch()
     const [loading, setLoading] = React.useState(false)

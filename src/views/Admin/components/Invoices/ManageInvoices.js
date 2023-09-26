@@ -10,7 +10,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeInvoiceStatus, getInternalNotes, getInvoiceStatuses, getInvoices } from '../../../../store/actions/adminActions';
+import { changeInvoiceStatus, changeInvoiceStatus2, getInternalNotes, getInvoiceStatuses, getInvoices } from '../../../../store/actions/adminActions';
 import AddInvoice from './components/AddInvoice';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ApproveInvoices from './components/ApproveInvoices';
@@ -22,6 +22,7 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import InternalNoteDialog from './components/InternalNoteDialog';
 import SearchIcon from '@mui/icons-material/Search';
 import ChatIcon from '@mui/icons-material/Chat';
+import AssignFacilityDialog from './components/AssignFacilityDialog';
 
 const StyledRoot = styled(Box)(({theme})=> ({
   padding: theme.spacing(3)
@@ -62,7 +63,10 @@ const [noteId, setNoteId] = React.useState('')
 const [noteData, setNoteData] = React.useState([])
 const [searchInput, setSearchInput] = React.useState("")
 const [filteredData, setFilteredData] = React.useState([])
+const [facilityDialog, setFacilityDialog] = React.useState(false)
+const [assignId, setAssignId] = React.useState('')
 const type = 'total_invoices'
+
 
 const getAllInoices = () => {
   setIl(true)
@@ -119,7 +123,7 @@ const handleCreateSuccess = () => {
     // console.log(invoiceId, '+++++')
     setALoading(true)
     const status = 'approved_for_payment'
-    dispatch(changeInvoiceStatus(val, status)).then((result) => {
+    dispatch(changeInvoiceStatus2(val, status)).then((result) => {
       enqueueSnackbar(result.data.message, {
         variant:'success'
       })
@@ -215,7 +219,14 @@ const handleCreateSuccess = () => {
         filterData(searchInput);
       }
     }, [searchInput, data, filteredData]);
-  // console.log(arr)
+    const handleAssign = (val) => {
+      setFacilityDialog(true)
+      setAssignId(val.id)
+    }
+    const createAssignSuccess = () => {
+      setFacilityDialog(false)
+      getAllInoices()
+    }
   const permissions = useSelector((state)=>state.admin.user.permissions)
   const role = useSelector((state)=>state.admin.user.role)
   // console.log(role) 
@@ -294,6 +305,12 @@ const handleCreateSuccess = () => {
                   : null
                 }
                 <TableCell sx={{color:'#fff'}}>Internal Note</TableCell>
+                {
+                  role == "admin" ?
+                  <TableCell sx={{color:'#fff'}}>Add Facility</TableCell>
+                : null
+                }
+
 
                 {
                   role == 'vendor' ? null :
@@ -305,8 +322,11 @@ const handleCreateSuccess = () => {
                 <TableCell sx={{color:'#fff'}}>Approve</TableCell>
                 }
                 <TableCell sx={{color:'#fff'}}>Chat</TableCell>
-
+                {
+                  role == 'vendor' ? null : 
                 <TableCell sx={{color:'#fff'}}>User</TableCell>
+                }
+
                 {
                   permissions.invoices == 'view_edit' ? 
                 <TableCell sx={{color:'#fff'}}>Actions</TableCell>
@@ -319,6 +339,9 @@ const handleCreateSuccess = () => {
             <TableBody>
               {filteredData.map((item) => {
                 // console.log(item, "+++++++")
+                const filteredData = item.assign.filter(item => item.role == role);
+
+                
                 return(
                   <TableRow key={item.id}>
                   <TableCell>{item.invoice_number}</TableCell>
@@ -360,6 +383,16 @@ const handleCreateSuccess = () => {
                     </Button>
                   </TableCell>
                   {
+                    role=="admin" ?
+                    <TableCell>
+                      <Button variant='outlined' endIcon={<AddIcon /> } 
+                      onClick={()=>handleAssign(item)}
+                      >
+                        Add
+                      </Button>
+                    </TableCell> : null
+                  }
+                  {
                   role == 'vendor' ? null :
                   <TableCell>{item.vendor ? item.vendor.name : 'Vendor Deleted'}</TableCell>
                   }
@@ -380,11 +413,19 @@ const handleCreateSuccess = () => {
                   {
                   role == 'vendor' ? null :
                 <TableCell>
-                  <Button variant={aLoading ? 'disabled' : 'outlined'}
+                  { filteredData[0]&&
+                    filteredData[0].pivot.approved == 0 ? 
+                    <Button variant={aLoading ? 'disabled' : 'outlined'}
                   onClick={()=>handleApprove(item.id)}
                   >
                     Approve
+                  </Button> :
+                  <Button variant='disabled'
+                  >
+                    Approved
                   </Button>
+                  }
+                  
                 </TableCell>
                   }
                   <TableCell>
@@ -397,7 +438,13 @@ const handleCreateSuccess = () => {
                    </IconButton>
                     </Tooltip>
                   </TableCell>
-                  <TableCell>{"User Deleted"}</TableCell>
+                  {
+                    role == 'vendor' ? null :
+                    <TableCell>
+                    {role == 'super_admin' ? 'Regional Admin' : filteredData[0].name}
+                  </TableCell>
+                  }
+              
 
                   {
                     permissions.invoices == 'view_edit' ?
@@ -526,6 +573,12 @@ const handleCreateSuccess = () => {
       invoiceId = {noteId}
       data = {noteData}
       createsuccess = {createNoteSuccess}
+      />
+      <AssignFacilityDialog 
+      open={facilityDialog}
+      close = {()=> setFacilityDialog(false)}
+      invoiceId = {assignId}
+      createSuccess = {createAssignSuccess}
       />
     </Page>
   )
