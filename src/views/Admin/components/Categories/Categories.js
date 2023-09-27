@@ -3,7 +3,7 @@ import Page from '../../../../components/page'
 import { Box, Button, styled, IconButton, 
   Typography, Divider, useTheme, Tooltip,
   Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton, 
-  Dialog,DialogTitle,DialogContent,TextField,DialogActions, Avatar
+  Dialog,DialogTitle,DialogContent,TextField,DialogActions, Avatar, Paper
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -129,7 +129,7 @@ const Categories = () => {
               All Categories
             </Typography>
           </Box>
-          <TableContainer>
+          <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>

@@ -4,7 +4,8 @@ import { Box, Button, styled, IconButton,
   Typography, Divider, useTheme, Tooltip,
   Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton,
   TextField,InputLabel,Select,Dialog,DialogActions,
-  DialogTitle,FormControl,MenuItem,DialogContent, Avatar, Input, InputAdornment 
+  DialogTitle,FormControl,MenuItem,DialogContent, Avatar, Input, InputAdornment, Badge, Paper,
+  tableCellClasses  
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,7 +18,7 @@ import ApproveInvoices from './components/ApproveInvoices';
 import { useSnackbar } from 'notistack';
 import AddIcon from '@mui/icons-material/Add';
 import ArchiveDialog from './components/ArchiveDialog';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import InternalNoteDialog from './components/InternalNoteDialog';
 import SearchIcon from '@mui/icons-material/Search';
@@ -66,7 +67,26 @@ const [filteredData, setFilteredData] = React.useState([])
 const [facilityDialog, setFacilityDialog] = React.useState(false)
 const [assignId, setAssignId] = React.useState('')
 const type = 'total_invoices'
+const navigate = useNavigate()
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
 
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
 const getAllInoices = () => {
   setIl(true)
@@ -105,7 +125,7 @@ const handleCreateSuccess = () => {
 
   }
   const handleApprove = (val) => {
-    if(role=="regional_admin") {
+    if(role=="regional_admin" || role == "super_admin") {
       // setInvoiceId(val)
       handleApproveRA(val)
     }
@@ -227,6 +247,9 @@ const handleCreateSuccess = () => {
       setFacilityDialog(false)
       getAllInoices()
     }
+    const handleChatIcon = (id) => {
+      navigate(`/admin/chat/${id}`)
+    }
   const permissions = useSelector((state)=>state.admin.user.permissions)
   const role = useSelector((state)=>state.admin.user.role)
   // console.log(role) 
@@ -285,51 +308,53 @@ const handleCreateSuccess = () => {
               All Invoices
             </Typography>
           </Box>
-          <TableContainer>
+          <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>
-                <TableCell sx={{color:'#fff'}}>Invoice Number</TableCell>
-                <TableCell sx={{color:'#fff'}}>Date of Invoice</TableCell>
-                <TableCell sx={{color:'#fff'}}>Due Date</TableCell>
-                <TableCell sx={{color:'#fff'}}>Amount Due</TableCell>
-                <TableCell sx={{color:'#fff'}}>Status</TableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Invoice Number</StyledTableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Date of Invoice</StyledTableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Due Date</StyledTableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Amount Due</StyledTableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Status</StyledTableCell>
+                {
+                  role == 'vendor' ? null :
+                <StyledTableCell sx={{color:'#fff'}}>Vendor</StyledTableCell>
+                }
+                {
+                  role == 'vendor' ? null : 
+                <StyledTableCell sx={{color:'#fff'}}>User</StyledTableCell>
+                }
+
                 {
                   role=="super_admin" ?
-                <TableCell sx={{color:'#fff'}}>Archive</TableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Archive</StyledTableCell>
                   : null
                 }
                 {
                   role == 'super_admin' ? 
-                  <TableCell sx={{color:'#fff'}}>Change Status</TableCell>
+                  <StyledTableCell sx={{color:'#fff'}}>Change Status</StyledTableCell>
                   : null
                 }
-                <TableCell sx={{color:'#fff'}}>Internal Note</TableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Internal Note</StyledTableCell>
                 {
                   role == "super_admin" ?
-                  <TableCell sx={{color:'#fff'}}>Add Facility</TableCell>
+                  <StyledTableCell sx={{color:'#fff'}}>Add Facility</StyledTableCell>
                 : null
                 }
 
 
+                
+                <StyledTableCell sx={{color:'#fff'}}>Invoice</StyledTableCell>
                 {
                   role == 'vendor' ? null :
-                <TableCell sx={{color:'#fff'}}>Vendor</TableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Approve</StyledTableCell>
                 }
-                <TableCell sx={{color:'#fff'}}>Invoice</TableCell>
-                {
-                  role == 'vendor' ? null :
-                <TableCell sx={{color:'#fff'}}>Approve</TableCell>
-                }
-                <TableCell sx={{color:'#fff'}}>Chat</TableCell>
-                {
-                  role == 'vendor' ? null : 
-                <TableCell sx={{color:'#fff'}}>User</TableCell>
-                }
-
+                <StyledTableCell sx={{color:'#fff'}}>Chat</StyledTableCell>
+                
                 {
                   permissions.invoices == 'view_edit' ? 
-                <TableCell sx={{color:'#fff'}}>Actions</TableCell>
+                <StyledTableCell sx={{color:'#fff'}}>Actions</StyledTableCell>
                 : null
                 }
 
@@ -341,18 +366,28 @@ const handleCreateSuccess = () => {
                 // console.log(item, "+++++++")
                 let newVar = role == "super_admin" ? "regional_admin" : role
                 const filteredData = item.assign.filter(item => item.role == newVar);
-
+                // console.log(filteredData)
                 
                 return(
-                  <TableRow key={item.id}>
-                  <TableCell>{item.invoice_number}</TableCell>
-                  <TableCell>{item.date_of_invoice}</TableCell>
-                  <TableCell>{item.due_date}</TableCell>
-                  <TableCell>{item.total_amount_due}</TableCell>
-                  <TableCell>{item.status_name}</TableCell>
+                  <StyledTableRow key={item.id}>
+                  <StyledTableCell>{item.invoice_number}</StyledTableCell>
+                  <StyledTableCell>{item.date_of_invoice}</StyledTableCell>
+                  <StyledTableCell>{item.due_date}</StyledTableCell>
+                  <StyledTableCell>{item.total_amount_due}</StyledTableCell>
+                  <StyledTableCell>{item.status_name}</StyledTableCell>
+                  {
+                  role == 'vendor' ? null :
+                  <StyledTableCell>{item.vendor ? item.vendor.name : 'Vendor Deleted'}</StyledTableCell>
+                  }
+                   {
+                    role == 'vendor' ? null :
+                    <StyledTableCell>
+                    {role == 'super_admin' ? 'Regional Admin' : filteredData[0].name}
+                  </StyledTableCell>
+                  }
                   {
                     role=="super_admin" ?
-                  <TableCell>
+                  <StyledTableCell>
                     <Button
                     variant='outlined'
                     onClick={()=>handleArchiveDialog(item)}
@@ -362,43 +397,40 @@ const handleCreateSuccess = () => {
                     >
                       Archive
                     </Button>
-                  </TableCell>
+                  </StyledTableCell>
                     : null
                   }
                   {
                     role=='super_admin' ? 
-                  <TableCell>
+                  <StyledTableCell>
                     <Button variant='outlined'
                     onClick={()=>handleClick(item)}
                     >
                       Change
                     </Button>
-                  </TableCell>
+                  </StyledTableCell>
                   : null
                   }
-                  <TableCell>
+                  <StyledTableCell>
                     <Button variant='outlined' endIcon={<AddIcon />}
                     onClick={()=>handleNoteDialog(item.id)}
                     >
                       Add
                     </Button>
-                  </TableCell>
+                  </StyledTableCell>
                   {
                     role=="super_admin" ?
-                    <TableCell>
+                    <StyledTableCell>
                       <Button variant='outlined' endIcon={<AddIcon /> } 
                       onClick={()=>handleAssign(item)}
                       >
                         Add
                       </Button>
-                    </TableCell> : null
+                    </StyledTableCell> : null
                   }
-                  {
-                  role == 'vendor' ? null :
-                  <TableCell>{item.vendor ? item.vendor.name : 'Vendor Deleted'}</TableCell>
-                  }
+                 
 
-                  <TableCell>
+                  <StyledTableCell>
                     <Button
                     variant='contained'
                     href={`${process.env.REACT_APP_URL}${item.upload.path}`}
@@ -410,46 +442,45 @@ const handleCreateSuccess = () => {
                     >
                       View
                     </Button>
-                  </TableCell>
+                  </StyledTableCell>
                   {
                   role == 'vendor' ? null :
-                <TableCell>
+                <StyledTableCell>
                   {
                     filteredData[0].pivot.approved == 0 ? 
                     <Button variant={aLoading ? 'disabled' : 'outlined'}
                   onClick={()=>handleApprove(item.id)}
                   >
                     Approve
-                  </Button> :
+                  </Button> 
+                  :
                   <Button variant='disabled'
                   >
                     Approved
                   </Button>
                   }
                   
-                </TableCell>
+                </StyledTableCell>
                   }
-                  <TableCell>
+                  <StyledTableCell>
                     <Tooltip title="Chat">
                    <IconButton
-                   component={Link}
-                   to={`/admin/chat/${item.id}`}
+                   onClick={()=>handleChatIcon(item.id)}
+                  //  component={Link}
+                  //  to={`/admin/chat/${item.id}`}
                    >
+                    <Badge color='primary' badgeContent={item.unread_chat_count}>
                         <ChatIcon />
+                    </Badge>
                    </IconButton>
                     </Tooltip>
-                  </TableCell>
-                  {
-                    role == 'vendor' ? null :
-                    <TableCell>
-                    {role == 'super_admin' ? 'Regional Admin' : filteredData[0].name}
-                  </TableCell>
-                  }
+                  </StyledTableCell>
+                 
               
 
                   {
                     permissions.invoices == 'view_edit' ?
-                  <TableCell>
+                  <StyledTableCell>
                     <Tooltip title="Edit Name">
                       <IconButton edge="end" aria-label="Edit">
                         <Avatar sx={{background:'none', border:'1px solid #002448',}}>
@@ -468,16 +499,16 @@ const handleCreateSuccess = () => {
                           </Avatar>
                       </IconButton>
                     </Tooltip>
-                  </TableCell> : null
+                  </StyledTableCell> : null
                   }
-                </TableRow>
+                </StyledTableRow>
                 )
               })}
                { (data.length < 1 && !iL) &&
           <TableRow >
-            <TableCell colSpan={9} sx={{textAlign:'center'}}>
+            <StyledTableCell colSpan={9} sx={{textAlign:'center'}}>
                No Data Found...
-            </TableCell>
+            </StyledTableCell>
         </TableRow>
         }
             </TableBody>

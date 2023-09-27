@@ -3,7 +3,7 @@ import React, { useState, useEffect }  from 'react'
 import Page from '../../../../../components/page'
 import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { getMsgs, sendMessage } from '../../../../../store/actions/adminActions'
+import { getMsgs, readInvoiceChat, sendMessage } from '../../../../../store/actions/adminActions'
 import Message from './Message'
 import { RotatingLines } from 'react-loader-spinner'
 const StyledRoot = styled(Box)(({theme})=> ({
@@ -47,6 +47,16 @@ const Chats = () => {
             clearInterval(intervalId);
           };
       
+    },[])
+    const readChat = () => {
+        dispatch(readInvoiceChat(user_id, id)).then((result) => {
+            console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+    React.useEffect(()=> {
+        readChat()
     },[])
     const scrollref = React.useRef()
     React.useEffect(()=> {

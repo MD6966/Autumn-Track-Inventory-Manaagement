@@ -4,7 +4,7 @@ import { Box, Button, styled,
   List, ListItem, ListItemText, ListItemSecondaryAction, 
   IconButton, Typography, Divider, useTheme, Tooltip,
   Dialog, DialogTitle,DialogActions,TextField, DialogContent,
-  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton, Avatar 
+  Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton, Avatar, Paper 
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -138,7 +138,7 @@ const Facilities = () => {
               All Facilities Names
             </Typography>
           </Box>
-          <TableContainer>
+          <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>

@@ -1,5 +1,5 @@
 import { Box, styled,Table,TableCell,Button,TableRow,Skeleton,
-  Typography,TableBody,TableContainer,TableHead, useTheme } from '@mui/material'
+  Typography,TableBody,TableContainer,TableHead, useTheme, Paper } from '@mui/material'
 import React from 'react'
 import Page from '../../../../components/page'
 import { useDispatch, useSelector } from 'react-redux'
@@ -38,7 +38,7 @@ const NewInvoices = () => {
               All New Invoices
             </Typography>
           </Box>
-          <TableContainer>
+          <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>
@@ -54,7 +54,9 @@ const NewInvoices = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {invoices.map((item) => {
+              {
+              invoices &&
+              invoices.map((item) => {
                 return(
                   <TableRow key={item.id}>
                   <TableCell>{item.invoice_number}</TableCell>
@@ -76,7 +78,7 @@ const NewInvoices = () => {
                 </TableRow>
                 )
               })}
-               { (invoices.length < 1 && !iL) &&
+               { (invoices && invoices.length < 1 && !iL) &&
           <TableRow >
             <TableCell colSpan={9} sx={{textAlign:'center'}}>
                No Data Found...

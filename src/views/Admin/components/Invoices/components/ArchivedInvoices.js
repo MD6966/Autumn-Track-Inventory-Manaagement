@@ -1,6 +1,6 @@
 import React from 'react'
 import Page from '../../../../../components/page'
-import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, Table, TableBody, TableCell, TableHead, TableRow, styled, useTheme } from '@mui/material'
+import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, useTheme } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { getArchivedInvoices, removeFromArchive } from '../../../../../store/actions/adminActions'
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
@@ -45,6 +45,7 @@ const ArchivedInvoices = () => {
     title="Archived"
     >
         <StyledRoot>
+            <TableContainer component={Paper}>
             <Table sx={{mt:5}}>
                 <TableHead>
                     <TableRow sx={{
@@ -89,6 +90,7 @@ const ArchivedInvoices = () => {
                    
                 </TableBody>
             </Table>
+            </TableContainer>
             <Dialog open={loading}>
                     <DialogTitle>Loading.......</DialogTitle>
                     <Divider />

@@ -4,7 +4,7 @@ import { Box, Button, styled, IconButton,
   Typography, Divider, useTheme, Tooltip,
   Table,TableHead,TableContainer,TableRow, TableCell,TableBody, Skeleton,
   TextField,InputLabel,Select,Dialog,DialogActions,
-  DialogTitle,FormControl,MenuItem,DialogContent, Avatar 
+  DialogTitle,FormControl,MenuItem,DialogContent, Avatar, Paper 
 
 } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -148,7 +148,7 @@ const Users = () => {
               All Users
             </Typography>
           </Box>
-          <TableContainer>
+          <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>

@@ -1,5 +1,5 @@
 import { Box, styled,Table,TableCell,Button,TableRow,Skeleton,
-  Typography,TableBody,TableContainer,TableHead, useTheme } from '@mui/material'
+  Typography,TableBody,TableContainer,TableHead, useTheme, Paper } from '@mui/material'
 import React from 'react'
 import Page from '../../../../components/page'
 import { useDispatch, useSelector } from 'react-redux'
@@ -37,7 +37,7 @@ const ApprByRA = () => {
               Approved By Reigonal Admin
             </Typography>
           </Box>
-          <TableContainer>
+          <TableContainer component={Paper}>
           <Table>
             <TableHead sx={{background:theme.palette.primary.main}}>
               <TableRow>

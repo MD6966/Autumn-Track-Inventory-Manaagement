@@ -13,6 +13,10 @@ import { getDashboardCounts, getUserPermissions } from '../../../../store/action
 import { useSpring, animated } from 'react-spring';
 import { Link, useNavigate } from 'react-router-dom';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import ChartComponent from './components/ChartComponent';
+import {Chart as ChartJS} from 'chart.js/auto'
+import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread';
+
 const StyledRoot = styled(Box)(({theme})=> ({
   minHeight:'100vh',
   background:'#e2e2e2',
@@ -48,7 +52,7 @@ const DashboardAdmin = () => {
     getCounts()
   },[])
   const permission = useSelector((state)=>state.admin.user.permissions)
-  console.log(counts)
+  // console.log(counts)
   const CardData = [
     {id:1, title:'Total Facilities', value:counts.facilities, 
     permission:permission.facilities,
@@ -66,7 +70,7 @@ const DashboardAdmin = () => {
     permission:permission.invoices,
     icon:<ReceiptIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>, to:"/admin/invoices" },
     {id:6, title:'Pending Approvals', value:counts.pending_invoices, 
-    icon:<ApprovalIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>,},
+    icon:<ApprovalIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>,  to:"/admin/invoices"},
     {id:7, title:'New Invoices', value:counts.new_invoices, 
     permission:permission.new_invoices,
     icon:<ReceiptIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>, to:"/admin/new-invoices" },
@@ -75,7 +79,11 @@ const DashboardAdmin = () => {
     icon:<CheckBoxIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>, to:"/admin/approved-by-admin" },
     {id:9, title:'Approved By RA', value:counts.approved_by_RA, 
     permission:permission.approved_by_RA,
-    icon:<CheckBoxIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>, to:"/admin/approved-by-ra"  },
+    icon:<CheckBoxIcon sx={{color:'#fff', fontSize:'2.25rem'}}/>, to:"/admin/approved-by-ra"},
+    {
+      id:10, title:'Unread Messages',icon:<MarkChatUnreadIcon sx={{color:'#fff', fontSize:'2.25rem'}} />,
+      value:counts.unread_text_count, to:"/admin/invoices"
+    }
   ]
   const AnimatedText = ({ value }) => {
     const springProps = useSpring({
@@ -140,6 +148,9 @@ const DashboardAdmin = () => {
             }
                 </Grid>
                 <Divider sx={{mt:2}} />
+                <Box sx={{width:'70vw',}}>
+                  <ChartComponent />
+                </Box>
             </StyledPaper> 
       </StyledRoot>
       

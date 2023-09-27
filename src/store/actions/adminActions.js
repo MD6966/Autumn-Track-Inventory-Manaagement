@@ -618,3 +618,13 @@ export const  assignFacility = (invoice_id, facility_id) => async (dispatch) => 
     throw err
   }
 }
+
+export const  readInvoiceChat = (user_id , invoice_id) => async (dispatch) => {
+  try{
+    const res = await api.post(`api/invoice/chat/read/${user_id}/${invoice_id}`)
+      return res
+  }
+  catch(err) {
+    throw err
+  }
+}
