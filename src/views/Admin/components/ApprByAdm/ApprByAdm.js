@@ -45,7 +45,6 @@ const ApprByAdm = () => {
                 <TableCell sx={{color:'#fff'}}>Date of Invoice</TableCell>
                 <TableCell sx={{color:'#fff'}}>Due Date</TableCell>
                 <TableCell sx={{color:'#fff'}}>Amount Due</TableCell>
-                <TableCell sx={{color:'#fff'}}>Status</TableCell>
                 <TableCell sx={{color:'#fff'}}>Invoice</TableCell>
                 <TableCell sx={{color:'#fff'}}>User</TableCell>
 
@@ -60,9 +59,10 @@ const ApprByAdm = () => {
                   <TableCell>{item.date_of_invoice}</TableCell>
                   <TableCell>{item.due_date}</TableCell>
                   <TableCell>{item.total_amount_due}</TableCell>
-                  <TableCell>{item.status}</TableCell>
                   <TableCell>
                     <Button
+                    href={`${process.env.REACT_APP_URL}${item.upload.path}`}
+                    target="_blank"
                     variant='contained'
                     endIcon={
                       <RemoveRedEyeIcon />

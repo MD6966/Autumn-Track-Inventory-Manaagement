@@ -37,13 +37,14 @@ const StyledCard = styled(Card)(({theme})=> ({
 
 const DashboardAdmin = () => {
   const [counts, setCounts] = React.useState([])
+  const [chartData , setChartData] = React.useState([])
   const dispatch = useDispatch()
   const id = useSelector((state)=>state.admin.user.id)
-  console.log(id)
+  // console.log(id)
   const getCounts = () => {
     dispatch(getDashboardCounts(id)).then((result) => {
-      // console.log(result)
       setCounts(result.data.data)
+      setChartData(result.data.data.six_month_invoices)
     }).catch((err) => {
       console.log(err)
     });
@@ -149,7 +150,7 @@ const DashboardAdmin = () => {
                 </Grid>
                 <Divider sx={{mt:2}} />
                 <Box sx={{width:'70vw',}}>
-                  <ChartComponent />
+                  <ChartComponent data={chartData} />
                 </Box>
             </StyledPaper> 
       </StyledRoot>
