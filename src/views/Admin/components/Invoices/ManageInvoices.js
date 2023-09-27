@@ -306,7 +306,7 @@ const handleCreateSuccess = () => {
                 }
                 <TableCell sx={{color:'#fff'}}>Internal Note</TableCell>
                 {
-                  role == "admin" ?
+                  role == "super_admin" ?
                   <TableCell sx={{color:'#fff'}}>Add Facility</TableCell>
                 : null
                 }
@@ -339,7 +339,8 @@ const handleCreateSuccess = () => {
             <TableBody>
               {filteredData.map((item) => {
                 // console.log(item, "+++++++")
-                const filteredData = item.assign.filter(item => item.role == role);
+                let newVar = role == "super_admin" ? "regional_admin" : role
+                const filteredData = item.assign.filter(item => item.role == newVar);
 
                 
                 return(
@@ -383,7 +384,7 @@ const handleCreateSuccess = () => {
                     </Button>
                   </TableCell>
                   {
-                    role=="admin" ?
+                    role=="super_admin" ?
                     <TableCell>
                       <Button variant='outlined' endIcon={<AddIcon /> } 
                       onClick={()=>handleAssign(item)}
@@ -413,7 +414,7 @@ const handleCreateSuccess = () => {
                   {
                   role == 'vendor' ? null :
                 <TableCell>
-                  { filteredData[0]&&
+                  {
                     filteredData[0].pivot.approved == 0 ? 
                     <Button variant={aLoading ? 'disabled' : 'outlined'}
                   onClick={()=>handleApprove(item.id)}

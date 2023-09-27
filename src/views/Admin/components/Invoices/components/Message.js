@@ -50,7 +50,7 @@ const Message = (props) => {
           sx={{
             mb: 2,
             p: 2,
-            borderRadius: 10,
+            borderRadius: 7,
             background: isSent ? '#e2e2e2' : '#002448',
             maxWidth: '450px',
             minWidth:'350px',
